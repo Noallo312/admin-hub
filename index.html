@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Hub — B4U Deals & AutoShop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b10;
+    --surface: #0e1318;
+    --surface2: #141b22;
+    --border: #1e2b36;
+    --accent-b4u: #00d4ff;
+    --accent-shop: #ff6b35;
+    --accent-both: #a855f7;
+    --text: #e8f4f8;
+    --muted: #5a7a8a;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid bg */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* LOGIN */
+  #login-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    background: var(--bg);
+  }
+
+  .login-box {
+    width: 420px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 48px;
+    position: relative;
+  }
+
+  .login-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-b4u), var(--accent-shop));
+  }
+
+  .login-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .login-title {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .login-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  .field-group { margin-bottom: 16px; }
+
+  .field-group label {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .field-group input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .field-group input:focus { border-color: var(--accent-b4u); }
+
+  .btn-login {
+    width: 100%;
+    background: var(--accent-b4u);
+    color: #000;
+    border: none;
+    padding: 14px;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    margin-top: 8px;
+    transition: opacity 0.2s;
+  }
+
+  .btn-login:hover { opacity: 0.85; }
+
+  .login-error {
+    color: var(--red);
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    margin-top: 12px;
+    display: none;
+  }
+
+  /* MAIN */
+  #app { display: none; position: relative; z-index: 1; }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .brand-name {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .brand-name span:first-child { color: var(--accent-b4u); }
+  .brand-name span:last-child { color: var(--accent-shop); }
+
+  .header-status {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .bot-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .bot-pill .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+
+  .bot-pill.online .dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .bot-pill.offline .dot { background: var(--red); }
+
+  .btn-logout {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+  /* NAV TABS */
+  .nav-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    background: var(--surface);
+    gap: 0;
+  }
+
+  .tab {
+    padding: 14px 24px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent-b4u); }
+  .tab[data-bot="shop"].active { border-bottom-color: var(--accent-shop); }
+  .tab[data-bot="both"].active { border-bottom-color: var(--accent-both); }
+
+  .tab-badge {
+    display: inline-block;
+    background: var(--accent-b4u);
+    color: #000;
+    font-size: 9px;
+    padding: 1px 6px;
+    margin-left: 6px;
+    font-weight: 700;
+  }
+
+  /* CONTENT */
+  .content {
+    padding: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* OVERVIEW GRID */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px;
+    width: 100%;
+  }
+
+  .stat-card.b4u::after { background: var(--accent-b4u); }
+  .stat-card.shop::after { background: var(--accent-shop); }
+  .stat-card.both::after { background: linear-gradient(90deg, var(--accent-b4u), var(--accent-shop)); }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .stat-value {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-value.b4u { color: var(--accent-b4u); }
+  .stat-value.shop { color: var(--accent-shop); }
+  .stat-value.both { color: var(--accent-both); }
+
+  .stat-sub {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* SECTION TITLE */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    margin-top: 32px;
+  }
+
+  .section-title {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 1px;
+    background: var(--muted);
+  }
+
+  /* TABLES */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  td {
+    padding: 12px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .badge-pending { background: rgba(245,158,11,0.15); color: var(--yellow); }
+  .badge-done { background: rgba(34,197,94,0.15); color: var(--green); }
+  .badge-cancel { background: rgba(239,68,68,0.15); color: var(--red); }
+  .badge-progress { background: rgba(0,212,255,0.15); color: var(--accent-b4u); }
+  .badge-b4u { background: rgba(0,212,255,0.1); color: var(--accent-b4u); border: 1px solid rgba(0,212,255,0.3); }
+  .badge-shop { background: rgba(255,107,53,0.1); color: var(--accent-shop); border: 1px solid rgba(255,107,53,0.3); }
+
+  .btn-action {
+    padding: 5px 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    text-transform: uppercase;
+    transition: all 0.15s;
+    margin-right: 4px;
+  }
+
+  .btn-action:hover { border-color: var(--accent-b4u); color: var(--accent-b4u); }
+  .btn-action.danger:hover { border-color: var(--red); color: var(--red); }
+  .btn-action.success:hover { border-color: var(--green); color: var(--green); }
+
+  /* CONFIG PANEL */
+  .config-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .config-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+  }
+
+  .config-box h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .config-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(30,43,54,0.5);
+    font-size: 13px;
+  }
+
+  .config-row:last-child { border-bottom: none; }
+  .config-key { color: var(--muted); font-size: 12px; }
+
+  .config-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    width: 200px;
+    outline: none;
+  }
+
+  .config-input:focus { border-color: var(--accent-b4u); }
+
+  /* LOADING */
+  .loading {
+    text-align: center;
+    padding: 48px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent-b4u);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 12px;
+    vertical-align: middle;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty {
+    text-align: center;
+    padding: 48px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+  }
+
+  /* ALERT */
+  .alert {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    z-index: 200;
+    animation: slideIn 0.2s ease;
+    max-width: 300px;
+  }
+
+  .alert.success { border-left: 3px solid var(--green); }
+  .alert.error { border-left: 3px solid var(--red); }
+
+  @keyframes slideIn {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  /* REFRESH BTN */
+  .btn-refresh {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .btn-refresh:hover { border-color: var(--accent-b4u); color: var(--accent-b4u); }
+
+  @media (max-width: 768px) {
+    .content { padding: 16px; }
+    .config-grid { grid-template-columns: 1fr; }
+    .header { padding: 12px 16px; }
+    .nav-tabs { padding: 0 16px; overflow-x: auto; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Admin Hub / v2.0</div>
+    <div class="login-title">Tableau de bord</div>
+    <div class="login-sub">Accès unifié B4U Deals & AutoShop</div>
+
+    <div class="field-group">
+      <label>URL B4U Deals</label>
+      <input type="text" id="b4u-url" placeholder="https://b4u-deals.up.railway.app" value="">
+    </div>
+    <div class="field-group">
+      <label>Mot de passe B4U Deals</label>
+      <input type="password" id="b4u-pass" placeholder="WEB_PASSWORD">
+    </div>
+    <div class="field-group" style="margin-top:24px; padding-top:24px; border-top:1px solid var(--border)">
+      <label>URL AutoShop</label>
+      <input type="text" id="shop-url" placeholder="https://autoshop.up.railway.app" value="">
+    </div>
+    <div class="field-group">
+      <label>Token AutoShop (DASHBOARD_SECRET)</label>
+      <input type="password" id="shop-token" placeholder="macdo2024secret">
+    </div>
+
+    <button class="btn-login" onclick="doLogin()">CONNEXION</button>
+    <div class="login-error" id="login-error">Connexion impossible. Vérifie les URLs et mots de passe.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="header">
+    <div class="header-brand">
+      <div class="brand-name">
+        <span>B4U</span> <span style="color:var(--muted)">×</span> <span>Shop</span>
+      </div>
+      <div style="font-size:11px; color:var(--muted); font-family:'Space Mono',monospace;">Admin Hub</div>
+    </div>
+    <div class="header-status">
+      <div class="bot-pill" id="pill-b4u">
+        <div class="dot"></div>B4U Deals
+      </div>
+      <div class="bot-pill" id="pill-shop">
+        <div class="dot"></div>AutoShop
+      </div>
+      <button class="btn-logout" onclick="logout()">Déconnexion</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs">
+    <div class="tab active" data-tab="overview" data-bot="both" onclick="switchTab('overview')">📊 Vue globale</div>
+    <div class="tab" data-tab="b4u-orders" data-bot="b4u" onclick="switchTab('b4u-orders')">📦 Commandes B4U</div>
+    <div class="tab" data-tab="shop-orders" data-bot="shop" onclick="switchTab('shop-orders')">🛒 Commandes Shop</div>
+    <div class="tab" data-tab="b4u-users" data-bot="b4u" onclick="switchTab('b4u-users')">👥 Users B4U</div>
+    <div class="tab" data-tab="shop-users" data-bot="shop" onclick="switchTab('shop-users')">👤 Users Shop</div>
+    <div class="tab" data-tab="shop-stock" data-bot="shop" onclick="switchTab('shop-stock')">📦 Stock Shop</div>
+    <div class="tab" data-tab="settings" data-bot="both" onclick="switchTab('settings')">⚙️ Config</div>
+  </div>
+
+  <div class="content">
+
+    <!-- OVERVIEW -->
+    <div class="tab-panel active" id="panel-overview">
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card b4u"><div class="stat-label">B4U — Revenus</div><div class="stat-value b4u" id="s-b4u-rev">—</div><div class="stat-sub">Cumulatif</div></div>
+        <div class="stat-card b4u"><div class="stat-label">B4U — Profit</div><div class="stat-value b4u" id="s-b4u-profit">—</div><div class="stat-sub">Net</div></div>
+        <div class="stat-card b4u"><div class="stat-label">B4U — Commandes</div><div class="stat-value b4u" id="s-b4u-orders">—</div><div class="stat-sub" id="s-b4u-pending">—</div></div>
+        <div class="stat-card shop"><div class="stat-label">Shop — Revenus</div><div class="stat-value shop" id="s-shop-rev">—</div><div class="stat-sub">Cumulatif</div></div>
+        <div class="stat-card shop"><div class="stat-label">Shop — Commandes</div><div class="stat-value shop" id="s-shop-orders">—</div><div class="stat-sub" id="s-shop-pending">—</div></div>
+        <div class="stat-card shop"><div class="stat-label">Shop — En ligne</div><div class="stat-value shop" id="s-shop-online">—</div><div class="stat-sub">Dernières 24h</div></div>
+        <div class="stat-card both"><div class="stat-label">Total — Revenus</div><div class="stat-value both" id="s-total-rev">—</div><div class="stat-sub">Tous bots confondus</div></div>
+        <div class="stat-card both"><div class="stat-label">Total — Commandes</div><div class="stat-value both" id="s-total-orders">—</div><div class="stat-sub">Combiné</div></div>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">Dernières commandes (tous bots)</div>
+        <button class="btn-refresh" onclick="loadOverview()">↻ Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Bot</th><th>ID</th><th>Client</th><th>Service / Produit</th><th>Prix</th><th>Statut</th><th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="all-orders-body">
+            <tr><td colspan="7"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- B4U ORDERS -->
+    <div class="tab-panel" id="panel-b4u-orders">
+      <div class="section-header">
+        <div class="section-title">Commandes B4U Deals</div>
+        <button class="btn-refresh" onclick="loadB4UOrders()">↻ Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Client</th><th>Email</th><th>Service</th><th>Plan</th><th>Prix</th><th>Paiement</th><th>Statut</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="b4u-orders-body">
+            <tr><td colspan="9"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SHOP ORDERS -->
+    <div class="tab-panel" id="panel-shop-orders">
+      <div class="section-header">
+        <div class="section-title">Commandes AutoShop</div>
+        <button class="btn-refresh" onclick="loadShopOrders()">↻ Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Client</th><th>Produit</th><th>Montant</th><th>Crypto</th><th>Statut</th><th>Date</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="shop-orders-body">
+            <tr><td colspan="8"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- B4U USERS -->
+    <div class="tab-panel" id="panel-b4u-users">
+      <div class="section-header">
+        <div class="section-title">Utilisateurs B4U Deals</div>
+        <button class="btn-refresh" onclick="loadB4UUsers()">↻ Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Nom</th><th>Username</th><th>Commandes</th><th>Dépensé</th><th>Dernier accès</th></tr>
+          </thead>
+          <tbody id="b4u-users-body">
+            <tr><td colspan="6"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SHOP USERS -->
+    <div class="tab-panel" id="panel-shop-users">
+      <div class="section-header">
+        <div class="section-title">Utilisateurs AutoShop</div>
+        <button class="btn-refresh" onclick="loadShopUsers()">↻ Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Username</th><th>Commandes</th><th>Dépensé</th><th>Statut</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="shop-users-body">
+            <tr><td colspan="6"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SHOP STOCK -->
+    <div class="tab-panel" id="panel-shop-stock">
+      <div class="section-header">
+        <div class="section-title">Stock AutoShop</div>
+        <button class="btn-refresh" onclick="loadShopStock()">↻ Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Produit</th><th>Catégorie</th><th>Stock</th><th>Prix</th><th>Statut</th></tr>
+          </thead>
+          <tbody id="shop-stock-body">
+            <tr><td colspan="5"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="tab-panel" id="panel-settings">
+      <div class="config-grid">
+        <div class="config-box">
+          <h3>🔵 Connexion B4U Deals</h3>
+          <div class="config-row">
+            <span class="config-key">URL</span>
+            <input class="config-input" id="cfg-b4u-url" type="text">
+          </div>
+          <div class="config-row">
+            <span class="config-key">Mot de passe</span>
+            <input class="config-input" id="cfg-b4u-pass" type="password">
+          </div>
+          <div style="margin-top:16px">
+            <button class="btn-action success" onclick="saveB4UConfig()">Sauvegarder</button>
+            <button class="btn-action" onclick="testB4U()">Tester</button>
+          </div>
+        </div>
+        <div class="config-box">
+          <h3>🟠 Connexion AutoShop</h3>
+          <div class="config-row">
+            <span class="config-key">URL</span>
+            <input class="config-input" id="cfg-shop-url" type="text">
+          </div>
+          <div class="config-row">
+            <span class="config-key">Token secret</span>
+            <input class="config-input" id="cfg-shop-token" type="password">
+          </div>
+          <div style="margin-top:16px">
+            <button class="btn-action success" onclick="saveShopConfig()">Sauvegarder</button>
+            <button class="btn-action" onclick="testShop()">Tester</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-box" style="margin-top:24px">
+        <h3>📢 Broadcast (AutoShop)</h3>
+        <div style="display:flex; gap:12px; align-items:flex-end">
+          <div style="flex:1">
+            <textarea id="broadcast-msg" style="width:100%; background:var(--bg); border:1px solid var(--border); color:var(--text); padding:12px; font-family:'Syne',sans-serif; font-size:13px; resize:vertical; min-height:80px; outline:none;" placeholder="Message à envoyer à tous les utilisateurs..."></textarea>
+          </div>
+          <button class="btn-action" style="height:40px" onclick="sendBroadcast()">Envoyer</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /app -->
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+let cfg = {
+  b4uUrl: '', b4uPass: '', b4uCookies: '',
+  shopUrl: '', shopToken: ''
+};
+
+function save() { localStorage.setItem('hub_cfg', JSON.stringify(cfg)); }
+function load() {
+  const s = localStorage.getItem('hub_cfg');
+  if (s) cfg = { ...cfg, ...JSON.parse(s) };
+}
+
+// ── LOGIN ──────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const b4uUrl = document.getElementById('b4u-url').value.trim().replace(/\/$/, '');
+  const b4uPass = document.getElementById('b4u-pass').value;
+  const shopUrl = document.getElementById('shop-url').value.trim().replace(/\/$/, '');
+  const shopToken = document.getElementById('shop-token').value;
+
+  document.getElementById('login-error').style.display = 'none';
+
+  let ok = false;
+
+  // Test B4U login
+  if (b4uUrl) {
+    try {
+      const fd = new FormData();
+      fd.append('password', b4uPass);
+      const r = await fetch(b4uUrl + '/login', { method: 'POST', body: fd, credentials: 'include', redirect: 'follow' });
+      if (r.ok || r.status === 200 || r.url.includes('/dashboard')) ok = true;
+    } catch(e) {}
+  }
+
+  // Test AutoShop
+  if (shopUrl && shopToken) {
+    try {
+      const r = await fetch(shopUrl + '/api/stats?token=' + shopToken);
+      if (r.ok) ok = true;
+    } catch(e) {}
+  }
+
+  if (!ok && (b4uUrl || shopUrl)) {
+    // Try to proceed anyway — let individual panels handle errors
+    ok = true;
+  }
+
+  cfg = { b4uUrl, b4uPass, b4uCookies: '', shopUrl, shopToken };
+  save();
+  showApp();
+}
+
+function logout() {
+  localStorage.removeItem('hub_cfg');
+  location.reload();
+}
+
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  fillSettings();
+  loadOverview();
+  checkStatus();
+}
+
+// ── TABS ───────────────────────────────────────────────────────────────────
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === id));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + id));
+  const loaders = { 'b4u-orders': loadB4UOrders, 'shop-orders': loadShopOrders, 'b4u-users': loadB4UUsers, 'shop-users': loadShopUsers, 'shop-stock': loadShopStock };
+  if (loaders[id]) loaders[id]();
+}
+
+// ── API HELPERS ────────────────────────────────────────────────────────────
+async function b4uGet(path) {
+  if (!cfg.b4uUrl) return null;
+  try {
+    const r = await fetch(cfg.b4uUrl + path, { credentials: 'include' });
+    if (r.status === 401 || r.url.includes('/login')) {
+      // Re-authenticate
+      const fd = new FormData(); fd.append('password', cfg.b4uPass);
+      await fetch(cfg.b4uUrl + '/login', { method: 'POST', body: fd, credentials: 'include' });
+      const r2 = await fetch(cfg.b4uUrl + path, { credentials: 'include' });
+      if (!r2.ok) return null;
+      return r2.json();
+    }
+    if (!r.ok) return null;
+    return r.json();
+  } catch(e) { return null; }
+}
+
+async function b4uPost(path, data) {
+  if (!cfg.b4uUrl) return null;
+  try {
+    const r = await fetch(cfg.b4uUrl + path, {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return r.ok ? r.json() : null;
+  } catch(e) { return null; }
+}
+
+async function shopGet(path) {
+  if (!cfg.shopUrl) return null;
+  try {
+    const sep = path.includes('?') ? '&' : '?';
+    const r = await fetch(cfg.shopUrl + path + sep + 'token=' + cfg.shopToken);
+    if (!r.ok) return null;
+    return r.json();
+  } catch(e) { return null; }
+}
+
+async function shopPost(path, data) {
+  if (!cfg.shopUrl) return null;
+  try {
+    const r = await fetch(cfg.shopUrl + path + '?token=' + cfg.shopToken, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Auth-Token': cfg.shopToken },
+      body: JSON.stringify(data)
+    });
+    return r.ok ? r.json() : null;
+  } catch(e) { return null; }
+}
+
+// ── STATUS CHECK ───────────────────────────────────────────────────────────
+async function checkStatus() {
+  const pb = document.getElementById('pill-b4u');
+  const ps = document.getElementById('pill-shop');
+
+  if (cfg.b4uUrl) {
+    const r = await b4uGet('/health');
+    pb.className = 'bot-pill ' + (r ? 'online' : 'offline');
+  }
+  if (cfg.shopUrl) {
+    const r = await shopGet('/api/stats');
+    ps.className = 'bot-pill ' + (r ? 'online' : 'offline');
+  }
+}
+
+// ── OVERVIEW ───────────────────────────────────────────────────────────────
+async function loadOverview() {
+  const [b4uData, shopData] = await Promise.all([
+    b4uGet('/api/dashboard'),
+    shopGet('/api/stats')
+  ]);
+
+  // B4U stats
+  if (b4uData) {
+    const s = b4uData.stats;
+    document.getElementById('s-b4u-rev').textContent = s.revenue?.toFixed(2) + '€';
+    document.getElementById('s-b4u-profit').textContent = s.profit?.toFixed(2) + '€';
+    document.getElementById('s-b4u-orders').textContent = s.total_orders;
+    document.getElementById('s-b4u-pending').textContent = s.pending_orders + ' en attente';
+  }
+
+  // Shop stats
+  if (shopData) {
+    const rev = (shopData.total_revenue || shopData.revenue || 0);
+    document.getElementById('s-shop-rev').textContent = parseFloat(rev).toFixed(2) + '€';
+    const tot = shopData.total_orders || shopData.orders_count || 0;
+    document.getElementById('s-shop-orders').textContent = tot;
+    const pend = shopData.pending_orders || shopData.pending || 0;
+    document.getElementById('s-shop-pending').textContent = pend + ' en attente';
+    const online = shopData.online || shopData.online_24h || 0;
+    document.getElementById('s-shop-online').textContent = online;
+  }
+
+  // Totals
+  const b4uRev = b4uData ? (b4uData.stats.revenue || 0) : 0;
+  const shopRev = shopData ? parseFloat(shopData.total_revenue || shopData.revenue || 0) : 0;
+  document.getElementById('s-total-rev').textContent = (b4uRev + shopRev).toFixed(2) + '€';
+  const b4uOrd = b4uData ? (b4uData.stats.total_orders || 0) : 0;
+  const shopOrd = shopData ? (shopData.total_orders || shopData.orders_count || 0) : 0;
+  document.getElementById('s-total-orders').textContent = b4uOrd + shopOrd;
+
+  // Combined recent orders
+  const tbody = document.getElementById('all-orders-body');
+  let rows = [];
+
+  if (b4uData?.orders) {
+    b4uData.orders.slice(0, 20).forEach(o => {
+      rows.push({
+        bot: 'b4u', id: o.id,
+        client: (o.first_name || '') + ' ' + (o.username ? '@' + o.username : ''),
+        product: o.service + ' / ' + o.plan,
+        price: (o.price || 0).toFixed(2) + '€',
+        status: o.status,
+        date: ''
+      });
+    });
+  }
+
+  if (!rows.length && !b4uData && !shopData) {
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty">Aucune donnée disponible. Vérifiez vos connexions.</div></td></tr>';
+    return;
+  }
+
+  // Shop orders
+  const shopOrders = await shopGet('/api/orders');
+  if (shopOrders) {
+    (shopOrders.orders || shopOrders).slice(0, 20).forEach(o => {
+      rows.push({
+        bot: 'shop', id: o.id || o.order_id,
+        client: o.username ? '@' + o.username : o.user_id,
+        product: o.product_name || o.product || o.item,
+        price: o.amount ? o.amount + '€' : '—',
+        status: o.status,
+        date: o.created_at || ''
+      });
+    });
+  }
+
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty">Aucune commande trouvée.</div></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td><span class="badge badge-${r.bot}">${r.bot === 'b4u' ? 'B4U' : 'Shop'}</span></td>
+      <td style="font-family:'Space Mono',monospace; font-size:12px">#${r.id}</td>
+      <td>${r.client || '—'}</td>
+      <td>${r.product || '—'}</td>
+      <td style="font-weight:700">${r.price}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td style="color:var(--muted); font-size:11px">${r.date ? new Date(r.date).toLocaleDateString('fr') : '—'}</td>
+    </tr>
+  `).join('');
+}
+
+// ── B4U ORDERS ─────────────────────────────────────────────────────────────
+async function loadB4UOrders() {
+  const tbody = document.getElementById('b4u-orders-body');
+  tbody.innerHTML = '<tr><td colspan="9"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr>';
+  const data = await b4uGet('/api/dashboard');
+  if (!data?.orders?.length) {
+    tbody.innerHTML = '<tr><td colspan="9"><div class="empty">Aucune commande B4U.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.orders.map(o => `
+    <tr>
+      <td style="font-family:'Space Mono',monospace; font-size:12px">#${o.id}</td>
+      <td>${(o.first_name || '') + ' ' + (o.username ? '@' + o.username : '')}</td>
+      <td style="color:var(--muted); font-size:12px">${o.email || '—'}</td>
+      <td>${o.service || '—'}</td>
+      <td>${o.plan || '—'}</td>
+      <td style="font-weight:700">${(o.price || 0).toFixed(2)}€</td>
+      <td>${o.payment_method || '—'}</td>
+      <td>${statusBadge(o.status)}</td>
+      <td>
+        ${o.status === 'en_attente' ? `<button class="btn-action success" onclick="b4uTakeOrder(${o.id})">Prendre</button>` : ''}
+        ${o.status === 'en_cours' ? `<button class="btn-action success" onclick="b4uCompleteOrder(${o.id})">Terminer</button>` : ''}
+        ${o.status !== 'annulee' && o.status !== 'terminee' ? `<button class="btn-action danger" onclick="b4uCancelOrder(${o.id})">Annuler</button>` : ''}
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function b4uTakeOrder(id) {
+  const r = await b4uPost('/api/order/' + id + '/take', {});
+  if (r) { showAlert('Commande #' + id + ' prise en charge', 'success'); loadB4UOrders(); }
+  else showAlert('Erreur', 'error');
+}
+
+async function b4uCompleteOrder(id) {
+  const r = await b4uPost('/api/order/' + id + '/complete', {});
+  if (r) { showAlert('Commande #' + id + ' terminée', 'success'); loadB4UOrders(); }
+  else showAlert('Erreur', 'error');
+}
+
+async function b4uCancelOrder(id) {
+  if (!confirm('Annuler commande #' + id + ' ?')) return;
+  const r = await b4uPost('/api/order/' + id + '/cancel', {});
+  if (r) { showAlert('Commande #' + id + ' annulée', 'success'); loadB4UOrders(); }
+  else showAlert('Erreur', 'error');
+}
+
+// ── SHOP ORDERS ────────────────────────────────────────────────────────────
+async function loadShopOrders() {
+  const tbody = document.getElementById('shop-orders-body');
+  tbody.innerHTML = '<tr><td colspan="8"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr>';
+  const data = await shopGet('/api/orders');
+  const orders = data?.orders || data || [];
+  if (!orders.length) {
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty">Aucune commande AutoShop.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = orders.map(o => `
+    <tr>
+      <td style="font-family:'Space Mono',monospace; font-size:12px">#${o.id || o.order_id}</td>
+      <td>${o.username ? '@' + o.username : o.user_id || '—'}</td>
+      <td>${o.product_name || o.product || o.item || '—'}</td>
+      <td style="font-weight:700">${o.amount ? o.amount + '€' : '—'}</td>
+      <td>${o.crypto || o.payment_method || '—'}</td>
+      <td>${statusBadge(o.status)}</td>
+      <td style="color:var(--muted); font-size:11px">${o.created_at ? new Date(o.created_at).toLocaleDateString('fr') : '—'}</td>
+      <td>
+        ${o.status === 'pending' || o.status === 'en_attente' ? `<button class="btn-action success" onclick="shopValidateOrder(${o.id || o.order_id})">Valider</button>` : ''}
+        ${o.status !== 'cancelled' && o.status !== 'annulee' ? `<button class="btn-action danger" onclick="shopCancelOrder(${o.id || o.order_id})">Refuser</button>` : ''}
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function shopValidateOrder(id) {
+  const r = await shopPost('/api/orders/' + id + '/validate', {});
+  if (r) { showAlert('Commande #' + id + ' validée', 'success'); loadShopOrders(); }
+  else showAlert('Erreur', 'error');
+}
+
+async function shopCancelOrder(id) {
+  if (!confirm('Refuser commande #' + id + ' ?')) return;
+  const r = await shopPost('/api/orders/' + id + '/refuse', {});
+  if (r) { showAlert('Commande #' + id + ' refusée', 'success'); loadShopOrders(); }
+  else showAlert('Erreur', 'error');
+}
+
+// ── USERS ──────────────────────────────────────────────────────────────────
+async function loadB4UUsers() {
+  const tbody = document.getElementById('b4u-users-body');
+  tbody.innerHTML = '<tr><td colspan="6"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr>';
+  const data = await b4uGet('/api/users');
+  const users = data?.users || data || [];
+  if (!users.length) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty">Aucun utilisateur.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td style="font-family:'Space Mono',monospace; font-size:12px">${u.user_id}</td>
+      <td>${(u.first_name || '') + ' ' + (u.last_name || '')}</td>
+      <td style="color:var(--accent-b4u)">${u.username ? '@' + u.username : '—'}</td>
+      <td>${u.order_count || 0}</td>
+      <td style="font-weight:700">${(u.total_spent || 0).toFixed(2)}€</td>
+      <td style="color:var(--muted); font-size:11px">${u.last_active ? new Date(u.last_active).toLocaleDateString('fr') : '—'}</td>
+    </tr>
+  `).join('');
+}
+
+async function loadShopUsers() {
+  const tbody = document.getElementById('shop-users-body');
+  tbody.innerHTML = '<tr><td colspan="6"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr>';
+  const data = await shopGet('/api/users');
+  const users = data?.users || data || [];
+  if (!users.length) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty">Aucun utilisateur.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td style="font-family:'Space Mono',monospace; font-size:12px">${u.user_id || u.id}</td>
+      <td style="color:var(--accent-shop)">${u.username ? '@' + u.username : '—'}</td>
+      <td>${u.order_count || u.orders || 0}</td>
+      <td style="font-weight:700">${(u.total_spent || u.spent || 0).toFixed ? (u.total_spent || u.spent || 0).toFixed(2) + '€' : '—'}</td>
+      <td>${u.banned ? '<span class="badge badge-cancel">Banni</span>' : '<span class="badge badge-done">Actif</span>'}</td>
+      <td>
+        ${u.banned
+          ? `<button class="btn-action success" onclick="shopUnban(${u.user_id || u.id})">Débannir</button>`
+          : `<button class="btn-action danger" onclick="shopBan(${u.user_id || u.id})">Bannir</button>`
+        }
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function shopBan(uid) {
+  if (!confirm('Bannir utilisateur ' + uid + ' ?')) return;
+  const r = await shopPost('/api/users/' + uid + '/ban', {});
+  if (r) { showAlert('Utilisateur banni', 'success'); loadShopUsers(); }
+  else showAlert('Erreur', 'error');
+}
+
+async function shopUnban(uid) {
+  const r = await shopPost('/api/users/' + uid + '/unban', {});
+  if (r) { showAlert('Utilisateur débanni', 'success'); loadShopUsers(); }
+  else showAlert('Erreur', 'error');
+}
+
+// ── STOCK ──────────────────────────────────────────────────────────────────
+async function loadShopStock() {
+  const tbody = document.getElementById('shop-stock-body');
+  tbody.innerHTML = '<tr><td colspan="5"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr>';
+  const data = await shopGet('/api/stock');
+  const items = data?.stock || data?.items || data || [];
+  if (!Array.isArray(items) || !items.length) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty">Stock vide.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = items.map(i => `
+    <tr>
+      <td>${i.name || i.product_name || '—'}</td>
+      <td>${i.category || '—'}</td>
+      <td style="font-weight:700; color:${(i.quantity || i.count || 0) < 5 ? 'var(--red)' : 'var(--green)'}">${i.quantity || i.count || 0}</td>
+      <td>${i.price ? i.price + '€' : '—'}</td>
+      <td>${i.active !== false ? '<span class="badge badge-done">Actif</span>' : '<span class="badge badge-cancel">Inactif</span>'}</td>
+    </tr>
+  `).join('');
+}
+
+// ── SETTINGS ───────────────────────────────────────────────────────────────
+function fillSettings() {
+  document.getElementById('cfg-b4u-url').value = cfg.b4uUrl;
+  document.getElementById('cfg-b4u-pass').value = cfg.b4uPass;
+  document.getElementById('cfg-shop-url').value = cfg.shopUrl;
+  document.getElementById('cfg-shop-token').value = cfg.shopToken;
+}
+
+function saveB4UConfig() {
+  cfg.b4uUrl = document.getElementById('cfg-b4u-url').value.trim().replace(/\/$/, '');
+  cfg.b4uPass = document.getElementById('cfg-b4u-pass').value;
+  save();
+  showAlert('Config B4U sauvegardée', 'success');
+}
+
+function saveShopConfig() {
+  cfg.shopUrl = document.getElementById('cfg-shop-url').value.trim().replace(/\/$/, '');
+  cfg.shopToken = document.getElementById('cfg-shop-token').value;
+  save();
+  showAlert('Config Shop sauvegardée', 'success');
+}
+
+async function testB4U() {
+  const r = await b4uGet('/health');
+  showAlert(r ? '✓ B4U Deals connecté' : '✗ Connexion B4U échouée', r ? 'success' : 'error');
+}
+
+async function testShop() {
+  const r = await shopGet('/api/stats');
+  showAlert(r ? '✓ AutoShop connecté' : '✗ Connexion Shop échouée', r ? 'success' : 'error');
+}
+
+async function sendBroadcast() {
+  const msg = document.getElementById('broadcast-msg').value.trim();
+  if (!msg) return;
+  if (!confirm('Envoyer ce message à tous les users AutoShop ?')) return;
+  const r = await shopPost('/api/broadcast', { message: msg });
+  if (r) { showAlert('Broadcast envoyé', 'success'); document.getElementById('broadcast-msg').value = ''; }
+  else showAlert('Erreur broadcast', 'error');
+}
+
+// ── HELPERS ────────────────────────────────────────────────────────────────
+function statusBadge(s) {
+  const map = {
+    en_attente: ['pending', 'En attente'],
+    pending: ['pending', 'En attente'],
+    en_cours: ['progress', 'En cours'],
+    processing: ['progress', 'En cours'],
+    terminee: ['done', 'Terminée'],
+    completed: ['done', 'Terminée'],
+    annulee: ['cancel', 'Annulée'],
+    cancelled: ['cancel', 'Annulée'],
+    refused: ['cancel', 'Refusée'],
+  };
+  const [cls, label] = map[s] || ['pending', s || '?'];
+  return `<span class="badge badge-${cls}">${label}</span>`;
+}
+
+let alertTimer;
+function showAlert(msg, type) {
+  clearTimeout(alertTimer);
+  const existing = document.querySelector('.alert');
+  if (existing) existing.remove();
+  const el = document.createElement('div');
+  el.className = 'alert ' + type;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  alertTimer = setTimeout(() => el.remove(), 3000);
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+load();
+if (cfg.b4uUrl || cfg.shopUrl) {
+  document.getElementById('b4u-url').value = cfg.b4uUrl;
+  document.getElementById('b4u-pass').value = cfg.b4uPass;
+  document.getElementById('shop-url').value = cfg.shopUrl;
+  document.getElementById('shop-token').value = cfg.shopToken;
+}
+</script>
+</body>
+</html>
