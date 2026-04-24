@@ -4,195 +4,147 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Hub — B4U Deals & AutoShop</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #080b10;
-    --surface: #0e1318;
-    --surface2: #141b22;
-    --border: #1e2b36;
-    --accent-b4u: #00d4ff;
-    --accent-shop: #ff6b35;
-    --accent-both: #a855f7;
-    --text: #e8f4f8;
-    --muted: #5a7a8a;
-    --green: #22c55e;
-    --red: #ef4444;
-    --yellow: #f59e0b;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; overflow-x: hidden; }
-  body::before {
-    content: ''; position: fixed; inset: 0;
-    background-image: linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px; pointer-events: none; z-index: 0;
-  }
+:root{--bg:#080b10;--surface:#0e1318;--surface2:#141b22;--border:#1e2b36;--b4u:#00d4ff;--shop:#ff6b35;--both:#a855f7;--text:#e8f4f8;--muted:#5a7a8a;--green:#22c55e;--red:#ef4444;--yellow:#f59e0b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
 
-  /* ── LOGIN ── */
-  #login-screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 100; background: var(--bg); }
-  .login-box { width: 400px; background: var(--surface); border: 1px solid var(--border); padding: 48px; position: relative; }
-  .login-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent-b4u), var(--accent-shop)); }
-  .login-logo { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 32px; }
-  .login-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
-  .login-sub { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
-  .field-group { margin-bottom: 16px; }
-  .field-group label { display: block; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
-  .field-group input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 16px; font-family: 'Space Mono', monospace; font-size: 13px; outline: none; transition: border-color 0.2s; }
-  .field-group input:focus { border-color: var(--accent-b4u); }
-  .btn-login { width: 100%; background: var(--accent-b4u); color: #000; border: none; padding: 14px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: 1px; margin-top: 8px; transition: opacity 0.2s; }
-  .btn-login:hover { opacity: 0.85; }
-  .login-error { color: var(--red); font-size: 12px; font-family: 'Space Mono', monospace; margin-top: 12px; display: none; }
+/* LOGIN */
+#login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:var(--bg)}
+.login-box{width:400px;background:var(--surface);border:1px solid var(--border);padding:48px;position:relative}
+.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--b4u),var(--shop))}
+.login-logo{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:32px}
+.login-title{font-size:28px;font-weight:800;margin-bottom:8px}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:32px}
+.field-group{margin-bottom:16px}
+.field-group label{display:block;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;text-transform:uppercase}
+.field-group input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px 16px;font-family:'Space Mono',monospace;font-size:13px;outline:none;transition:border-color .2s}
+.field-group input:focus{border-color:var(--b4u)}
+.btn-login{width:100%;background:var(--b4u);color:#000;border:none;padding:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:1px;margin-top:8px;transition:opacity .2s}
+.btn-login:hover{opacity:.85}
+.login-error{color:var(--red);font-size:12px;font-family:'Space Mono',monospace;margin-top:12px;display:none}
 
-  /* ── APP ── */
-  #app { display: none; position: relative; z-index: 1; }
+/* APP */
+#app{display:none;position:relative;z-index:1}
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:50}
+.brand-name{font-size:18px;font-weight:800}
+.brand-name .b{color:var(--b4u)}.brand-name .s{color:var(--shop)}
+.header-right{display:flex;gap:12px;align-items:center}
+.bot-pill{display:flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--border);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase}
+.bot-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--muted)}
+.bot-pill.online .dot{background:var(--green);box-shadow:0 0 6px var(--green)}
+.bot-pill.offline .dot{background:var(--red)}
+.user-badge{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);padding:6px 14px;border:1px solid var(--border)}
+.user-badge span{color:var(--both)}
+.btn-logout{background:none;border:1px solid var(--border);color:var(--muted);padding:6px 14px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;text-transform:uppercase;transition:all .2s}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
 
-  /* ── HEADER ── */
-  .header { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 50; }
-  .header-brand { display: flex; align-items: center; gap: 16px; }
-  .brand-name { font-size: 18px; font-weight: 800; }
-  .brand-name .b { color: var(--accent-b4u); }
-  .brand-name .s { color: var(--accent-shop); }
-  .header-right { display: flex; gap: 12px; align-items: center; }
-  .bot-pill { display: flex; align-items: center; gap: 8px; padding: 6px 14px; border: 1px solid var(--border); font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
-  .bot-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
-  .bot-pill.online .dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
-  .bot-pill.offline .dot { background: var(--red); }
-  .user-badge { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); padding: 6px 14px; border: 1px solid var(--border); }
-  .user-badge span { color: var(--accent-both); }
-  .btn-logout { background: none; border: 1px solid var(--border); color: var(--muted); padding: 6px 14px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
-  .btn-logout:hover { border-color: var(--red); color: var(--red); }
+/* TABS */
+.nav-tabs{display:flex;border-bottom:1px solid var(--border);padding:0 32px;background:var(--surface);overflow-x:auto}
+.tab{padding:14px 20px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;font-family:'Space Mono',monospace}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--text);border-bottom-color:var(--b4u)}
+.tab[data-bot="shop"].active{border-bottom-color:var(--shop)}
+.tab[data-bot="both"].active,.tab[data-bot="admin"].active{border-bottom-color:var(--both)}
+.tab.hidden{display:none}
 
-  /* ── TABS ── */
-  .nav-tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 32px; background: var(--surface); overflow-x: auto; }
-  .tab { padding: 14px 20px; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; font-family: 'Space Mono', monospace; }
-  .tab:hover { color: var(--text); }
-  .tab.active { color: var(--text); border-bottom-color: var(--accent-b4u); }
-  .tab[data-bot="shop"].active { border-bottom-color: var(--accent-shop); }
-  .tab[data-bot="both"].active { border-bottom-color: var(--accent-both); }
-  .tab[data-bot="admin"].active { border-bottom-color: var(--accent-both); }
-  .tab.hidden { display: none; }
+/* CONTENT */
+.content{padding:32px;max-width:1400px;margin:0 auto}
+.tab-panel{display:none}.tab-panel.active{display:block}
 
-  /* ── CONTENT ── */
-  .content { padding: 32px; max-width: 1400px; margin: 0 auto; }
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:var(--surface);border:1px solid var(--border);padding:24px;position:relative;overflow:hidden}
+.stat-card::after{content:'';position:absolute;bottom:0;left:0;height:2px;width:100%}
+.stat-card.b4u::after{background:var(--b4u)}.stat-card.shop::after{background:var(--shop)}.stat-card.both::after{background:linear-gradient(90deg,var(--b4u),var(--shop))}
+.stat-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:12px}
+.stat-value{font-size:30px;font-weight:800;line-height:1;margin-bottom:4px}
+.stat-value.b4u{color:var(--b4u)}.stat-value.shop{color:var(--shop)}.stat-value.both{color:var(--both)}
+.stat-sub{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace}
 
-  /* ── STATS ── */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-bottom: 32px; }
-  .stat-card { background: var(--surface); border: 1px solid var(--border); padding: 24px; position: relative; overflow: hidden; }
-  .stat-card::after { content: ''; position: absolute; bottom: 0; left: 0; height: 2px; width: 100%; }
-  .stat-card.b4u::after { background: var(--accent-b4u); }
-  .stat-card.shop::after { background: var(--accent-shop); }
-  .stat-card.both::after { background: linear-gradient(90deg, var(--accent-b4u), var(--accent-shop)); }
-  .stat-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; }
-  .stat-value { font-size: 30px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
-  .stat-value.b4u { color: var(--accent-b4u); }
-  .stat-value.shop { color: var(--accent-shop); }
-  .stat-value.both { color: var(--accent-both); }
-  .stat-sub { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
+/* SECTION */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;margin-top:32px}
+.section-title{font-size:11px;font-family:'Space Mono',monospace;letter-spacing:3px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px}
+.section-title::before{content:'';display:inline-block;width:16px;height:1px;background:var(--muted)}
 
-  /* ── SECTION ── */
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; margin-top: 32px; }
-  .section-title { font-size: 11px; font-family: 'Space Mono', monospace; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 10px; }
-  .section-title::before { content: ''; display: inline-block; width: 16px; height: 1px; background: var(--muted); }
+/* TABLE */
+.table-wrap{background:var(--surface);border:1px solid var(--border);overflow:hidden;overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:500px}
+th{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2);white-space:nowrap}
+td{padding:12px 16px;font-size:13px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface2)}
 
-  /* ── TABLE ── */
-  .table-wrap { background: var(--surface); border: 1px solid var(--border); overflow: hidden; overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; min-width: 600px; }
-  th { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); background: var(--surface2); white-space: nowrap; }
-  td { padding: 12px 16px; font-size: 13px; border-bottom: 1px solid var(--border); }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--surface2); }
+/* BADGES */
+.badge{display:inline-block;padding:2px 10px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;font-weight:700}
+.badge-pending{background:rgba(245,158,11,.15);color:var(--yellow)}
+.badge-done{background:rgba(34,197,94,.15);color:var(--green)}
+.badge-cancel{background:rgba(239,68,68,.15);color:var(--red)}
+.badge-progress{background:rgba(0,212,255,.15);color:var(--b4u)}
+.badge-b4u{background:rgba(0,212,255,.1);color:var(--b4u);border:1px solid rgba(0,212,255,.3)}
+.badge-shop{background:rgba(255,107,53,.1);color:var(--shop);border:1px solid rgba(255,107,53,.3)}
+.badge-admin{background:rgba(168,85,247,.15);color:var(--both)}
 
-  /* ── BADGES ── */
-  .badge { display: inline-block; padding: 2px 10px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
-  .badge-pending { background: rgba(245,158,11,0.15); color: var(--yellow); }
-  .badge-done { background: rgba(34,197,94,0.15); color: var(--green); }
-  .badge-cancel { background: rgba(239,68,68,0.15); color: var(--red); }
-  .badge-progress { background: rgba(0,212,255,0.15); color: var(--accent-b4u); }
-  .badge-b4u { background: rgba(0,212,255,0.1); color: var(--accent-b4u); border: 1px solid rgba(0,212,255,0.3); }
-  .badge-shop { background: rgba(255,107,53,0.1); color: var(--accent-shop); border: 1px solid rgba(255,107,53,0.3); }
-  .badge-admin { background: rgba(168,85,247,0.15); color: var(--accent-both); }
+/* BUTTONS */
+.btn-action{padding:5px 12px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;cursor:pointer;border:1px solid var(--border);background:none;color:var(--muted);text-transform:uppercase;transition:all .15s;margin-right:4px}
+.btn-action:hover{border-color:var(--b4u);color:var(--b4u)}
+.btn-action.danger:hover{border-color:var(--red);color:var(--red)}
+.btn-action.success:hover{border-color:var(--green);color:var(--green)}
+.btn-refresh{background:none;border:1px solid var(--border);color:var(--muted);padding:6px 14px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:all .2s}
+.btn-refresh:hover{border-color:var(--b4u);color:var(--b4u)}
 
-  /* ── BUTTONS ── */
-  .btn-action { padding: 5px 12px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 1px; cursor: pointer; border: 1px solid var(--border); background: none; color: var(--muted); text-transform: uppercase; transition: all 0.15s; margin-right: 4px; }
-  .btn-action:hover { border-color: var(--accent-b4u); color: var(--accent-b4u); }
-  .btn-action.danger:hover { border-color: var(--red); color: var(--red); }
-  .btn-action.success:hover { border-color: var(--green); color: var(--green); }
-  .btn-refresh { background: none; border: 1px solid var(--border); color: var(--muted); padding: 6px 14px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
-  .btn-refresh:hover { border-color: var(--accent-b4u); color: var(--accent-b4u); }
+/* LOADING */
+.loading{text-align:center;padding:48px;color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--b4u);border-radius:50%;animation:spin .8s linear infinite;margin-right:12px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:48px;color:var(--muted);font-family:'Space Mono',monospace;font-size:11px}
 
-  /* ── LOADING / EMPTY ── */
-  .loading { text-align: center; padding: 48px; color: var(--muted); font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; }
-  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent-b4u); border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 12px; vertical-align: middle; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .empty { text-align: center; padding: 48px; color: var(--muted); font-family: 'Space Mono', monospace; font-size: 11px; }
+/* ALERT */
+.alert{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);padding:16px 24px;font-family:'Space Mono',monospace;font-size:12px;z-index:9999;animation:slideIn .2s ease;max-width:320px}
+.alert.success{border-left:3px solid var(--green)}.alert.error{border-left:3px solid var(--red)}
+@keyframes slideIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
 
-  /* ── ALERT ── */
-  .alert { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); padding: 16px 24px; font-family: 'Space Mono', monospace; font-size: 12px; z-index: 9999; animation: slideIn 0.2s ease; max-width: 320px; }
-  .alert.success { border-left: 3px solid var(--green); }
-  .alert.error { border-left: 3px solid var(--red); }
-  @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+/* USER MGMT */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.panel-box{background:var(--surface);border:1px solid var(--border);padding:24px}
+.panel-box h3{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
+.form-row input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 14px;font-family:'Space Mono',monospace;font-size:12px;outline:none}
+.form-row input:focus{border-color:var(--both)}
+.perm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.perm-item{display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);cursor:pointer;padding:6px;border:1px solid var(--border);transition:all .15s}
+.perm-item:hover{border-color:var(--both);color:var(--text)}
+.perm-item input[type=checkbox]{accent-color:var(--both);width:14px;height:14px}
+.btn-create{width:100%;background:var(--both);color:#fff;border:none;padding:12px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:2px;margin-top:8px;transition:opacity .2s}
+.btn-create:hover{opacity:.85}
 
-  /* ── USER MANAGEMENT ── */
-  .user-mgmt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-  .panel-box { background: var(--surface); border: 1px solid var(--border); padding: 24px; }
-  .panel-box h3 { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-  .form-row { margin-bottom: 14px; }
-  .form-row label { display: block; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; }
-  .form-row input, .form-row select { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px 14px; font-family: 'Space Mono', monospace; font-size: 12px; outline: none; }
-  .form-row input:focus, .form-row select:focus { border-color: var(--accent-both); }
-  .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-  .perm-item { display: flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); cursor: pointer; padding: 6px; border: 1px solid var(--border); transition: all 0.15s; }
-  .perm-item:hover { border-color: var(--accent-both); color: var(--text); }
-  .perm-item input[type=checkbox] { accent-color: var(--accent-both); width: 14px; height: 14px; }
-  .btn-create { width: 100%; background: var(--accent-both); color: #fff; border: none; padding: 12px; font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; cursor: pointer; letter-spacing: 2px; margin-top: 8px; transition: opacity 0.2s; }
-  .btn-create:hover { opacity: 0.85; }
-
-  /* ── CONFIG ── */
-  .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-  .config-box { background: var(--surface); border: 1px solid var(--border); padding: 24px; }
-  .config-box h3 { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-  .config-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(30,43,54,0.5); }
-  .config-row:last-child { border-bottom: none; }
-  .config-key { color: var(--muted); font-size: 12px; }
-  .config-input { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; font-family: 'Space Mono', monospace; font-size: 12px; width: 200px; outline: none; }
-
-  @media (max-width: 768px) {
-    .content { padding: 16px; }
-    .user-mgmt-grid, .config-grid { grid-template-columns: 1fr; }
-    .header { padding: 12px 16px; }
-    .stats-grid { grid-template-columns: 1fr 1fr; }
-    .header-right .bot-pill { display: none; }
-  }
+@media(max-width:768px){
+  .content{padding:16px}.two-col{grid-template-columns:1fr}
+  .header{padding:12px 16px}.stats-grid{grid-template-columns:1fr 1fr}
+  .header-right .bot-pill{display:none}
+}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">Admin Hub / v3.0</div>
     <div class="login-title">Connexion</div>
     <div class="login-sub">B4U Deals × AutoShop</div>
-    <div class="field-group">
-      <label>Nom d'utilisateur</label>
-      <input type="text" id="login-username" placeholder="admin" autocomplete="username">
-    </div>
-    <div class="field-group">
-      <label>Mot de passe</label>
-      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
-    </div>
+    <div class="field-group"><label>Nom d'utilisateur</label><input type="text" id="login-username" placeholder="admin" autocomplete="username"></div>
+    <div class="field-group"><label>Mot de passe</label><input type="password" id="login-password" placeholder="••••••••"></div>
     <button class="btn-login" onclick="doLogin()">SE CONNECTER</button>
     <div class="login-error" id="login-error">Identifiants incorrects.</div>
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
   <div class="header">
-    <div class="header-brand">
+    <div style="display:flex;align-items:center;gap:16px">
       <div class="brand-name"><span class="b">B4U</span> <span style="color:var(--muted)">×</span> <span class="s">Shop</span></div>
       <div style="font-size:11px;color:var(--muted);font-family:'Space Mono',monospace">Admin Hub</div>
     </div>
@@ -204,7 +156,7 @@
     </div>
   </div>
 
-  <div class="nav-tabs" id="nav-tabs">
+  <div class="nav-tabs">
     <div class="tab active" data-tab="overview" data-bot="both" onclick="switchTab('overview')">📊 Vue globale</div>
     <div class="tab" data-tab="b4u-orders" data-bot="b4u" onclick="switchTab('b4u-orders')">📦 Commandes B4U</div>
     <div class="tab" data-tab="shop-orders" data-bot="shop" onclick="switchTab('shop-orders')">🛒 Commandes Shop</div>
@@ -225,7 +177,7 @@
         <div class="stat-card b4u"><div class="stat-label">B4U — Commandes</div><div class="stat-value b4u" id="s-b4u-orders">—</div><div class="stat-sub" id="s-b4u-pending">—</div></div>
         <div class="stat-card shop"><div class="stat-label">Shop — Revenus</div><div class="stat-value shop" id="s-shop-rev">—</div><div class="stat-sub">Cumulatif</div></div>
         <div class="stat-card shop"><div class="stat-label">Shop — Commandes</div><div class="stat-value shop" id="s-shop-orders">—</div><div class="stat-sub" id="s-shop-pending">—</div></div>
-        <div class="stat-card shop"><div class="stat-label">Shop — En ligne</div><div class="stat-value shop" id="s-shop-online">—</div><div class="stat-sub">Dernières 24h</div></div>
+        <div class="stat-card shop"><div class="stat-label">Shop — Stock total</div><div class="stat-value shop" id="s-shop-stock">—</div><div class="stat-sub">Unités</div></div>
         <div class="stat-card both"><div class="stat-label">Total — Revenus</div><div class="stat-value both" id="s-total-rev">—</div><div class="stat-sub">Tous bots</div></div>
         <div class="stat-card both"><div class="stat-label">Total — Commandes</div><div class="stat-value both" id="s-total-orders">—</div><div class="stat-sub">Combiné</div></div>
       </div>
@@ -258,7 +210,7 @@
         <button class="btn-refresh" onclick="loadShopOrders()">↻ Refresh</button>
       </div>
       <div class="table-wrap">
-        <table><thead><tr><th>ID</th><th>Client</th><th>Produit</th><th>Montant</th><th>Crypto</th><th>Statut</th><th>Date</th><th>Actions</th></tr></thead>
+        <table><thead><tr><th>ID</th><th>Client</th><th>Produit</th><th>Prix</th><th>Méthode</th><th>Statut</th><th>Date</th><th>Actions</th></tr></thead>
         <tbody id="shop-orders-body"><tr><td colspan="8"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr></tbody></table>
       </div>
     </div>
@@ -270,8 +222,8 @@
         <button class="btn-refresh" onclick="loadB4UUsers()">↻ Refresh</button>
       </div>
       <div class="table-wrap">
-        <table><thead><tr><th>ID</th><th>Nom</th><th>Username</th><th>Commandes</th><th>Dépensé</th><th>Dernier accès</th></tr></thead>
-        <tbody id="b4u-users-body"><tr><td colspan="6"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr></tbody></table>
+        <table><thead><tr><th>ID</th><th>Nom</th><th>Username</th><th>Commandes</th><th>Dernier accès</th></tr></thead>
+        <tbody id="b4u-users-body"><tr><td colspan="5"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr></tbody></table>
       </div>
     </div>
 
@@ -294,25 +246,18 @@
         <button class="btn-refresh" onclick="loadShopStock()">↻ Refresh</button>
       </div>
       <div class="table-wrap">
-        <table><thead><tr><th>Produit</th><th>Catégorie</th><th>Stock</th><th>Prix</th><th>Statut</th></tr></thead>
-        <tbody id="shop-stock-body"><tr><td colspan="5"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr></tbody></table>
+        <table><thead><tr><th>Produit</th><th>Slug</th><th>Stock</th><th>Prix</th></tr></thead>
+        <tbody id="shop-stock-body"><tr><td colspan="4"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr></tbody></table>
       </div>
     </div>
 
     <!-- ADMIN USERS -->
     <div class="tab-panel" id="panel-admin-users">
-      <div class="user-mgmt-grid">
-        <!-- Créer un utilisateur -->
+      <div class="two-col">
         <div class="panel-box">
           <h3>➕ Créer un utilisateur</h3>
-          <div class="form-row">
-            <label>Nom d'utilisateur</label>
-            <input type="text" id="new-username" placeholder="ex: employe1">
-          </div>
-          <div class="form-row">
-            <label>Mot de passe</label>
-            <input type="password" id="new-password" placeholder="••••••••">
-          </div>
+          <div class="form-row"><label>Nom d'utilisateur</label><input type="text" id="new-username" placeholder="ex: employe1"></div>
+          <div class="form-row"><label>Mot de passe</label><input type="password" id="new-password" placeholder="••••••••"></div>
           <div class="form-row">
             <label>Permissions</label>
             <div class="perm-grid">
@@ -321,15 +266,13 @@
               <label class="perm-item"><input type="checkbox" id="p-shop-orders"> Commandes Shop</label>
               <label class="perm-item"><input type="checkbox" id="p-b4u-users"> Users B4U</label>
               <label class="perm-item"><input type="checkbox" id="p-shop-users"> Users Shop</label>
-              <label class="perm-item"><input type="checkbox" id="p-shop-stock"> Stock Shop</label>
-              <label class="perm-item"><input type="checkbox" id="p-actions"> Actions (valider/annuler)</label>
+              <label class="perm-item"><input type="checkbox" id="p-shop-stock"> Stock</label>
+              <label class="perm-item"><input type="checkbox" id="p-actions"> Actions</label>
               <label class="perm-item"><input type="checkbox" id="p-settings"> Config</label>
             </div>
           </div>
           <button class="btn-create" onclick="createUser()">CRÉER L'UTILISATEUR</button>
         </div>
-
-        <!-- Liste des utilisateurs -->
         <div class="panel-box">
           <h3>👥 Utilisateurs du hub</h3>
           <div id="hub-users-list"></div>
@@ -339,24 +282,24 @@
 
     <!-- SETTINGS -->
     <div class="tab-panel" id="panel-settings">
-      <div class="config-grid">
-        <div class="config-box">
+      <div class="two-col">
+        <div class="panel-box">
           <h3>🔵 B4U Deals</h3>
-          <div class="config-row"><span class="config-key">URL Railway</span><input class="config-input" id="cfg-b4u-url" type="text" readonly></div>
-          <div class="config-row"><span class="config-key">Statut</span><span id="cfg-b4u-status" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">—</span></div>
-          <div style="margin-top:16px"><button class="btn-action" onclick="testB4U()">Tester connexion</button></div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px">URL : <span style="color:var(--b4u)">web-production-80c7.up.railway.app</span></div>
+          <div style="margin-bottom:16px"><span id="cfg-b4u-status" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">—</span></div>
+          <button class="btn-action" onclick="testB4U()">Tester connexion</button>
         </div>
-        <div class="config-box">
+        <div class="panel-box">
           <h3>🟠 AutoShop</h3>
-          <div class="config-row"><span class="config-key">URL Railway</span><input class="config-input" id="cfg-shop-url" type="text" readonly></div>
-          <div class="config-row"><span class="config-key">Statut</span><span id="cfg-shop-status" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">—</span></div>
-          <div style="margin-top:16px"><button class="btn-action" onclick="testShop()">Tester connexion</button></div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px">URL : <span style="color:var(--shop)">bot-production-3794.up.railway.app</span></div>
+          <div style="margin-bottom:16px"><span id="cfg-shop-status" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">—</span></div>
+          <button class="btn-action" onclick="testShop()">Tester connexion</button>
         </div>
       </div>
-      <div class="config-box" style="margin-top:24px">
+      <div class="panel-box" style="margin-top:24px">
         <h3>📢 Broadcast AutoShop</h3>
         <div style="display:flex;gap:12px;align-items:flex-end">
-          <textarea id="broadcast-msg" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px;font-family:'Syne',sans-serif;font-size:13px;resize:vertical;min-height:80px;outline:none;" placeholder="Message à envoyer à tous les utilisateurs..."></textarea>
+          <textarea id="broadcast-msg" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px;font-family:'Syne',sans-serif;font-size:13px;resize:vertical;min-height:80px;outline:none" placeholder="Message à envoyer à tous les utilisateurs..."></textarea>
           <button class="btn-action" style="height:40px" onclick="sendBroadcast()">Envoyer</button>
         </div>
       </div>
@@ -366,168 +309,134 @@
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// CONFIG — URLs hardcodées
-// ═══════════════════════════════════════════════════════════
-const B4U_URL   = 'https://web-production-80c7.up.railway.app';
-const SHOP_URL  = 'https://bot-production-3794.up.railway.app';
-const B4U_PASS  = 'Jamal2laleague';
+// ═══════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════
+const B4U_URL    = 'https://web-production-80c7.up.railway.app';
+const SHOP_URL   = 'https://bot-production-3794.up.railway.app';
+const B4U_PASS   = 'Jamal2laleague';
 const SHOP_TOKEN = 'Jamal2laleague';
+const ALL_PERMS  = ['overview','b4u-orders','shop-orders','b4u-users','shop-users','shop-stock','actions','settings'];
 
-// ═══════════════════════════════════════════════════════════
-// SYSTÈME D'UTILISATEURS (stocké en localStorage)
-// ═══════════════════════════════════════════════════════════
-const ALL_PERMS = ['overview','b4u-orders','shop-orders','b4u-users','shop-users','shop-stock','actions','settings'];
-
+// ═══════════════════════════════════════════════
+// USERS (localStorage)
+// ═══════════════════════════════════════════════
 function getUsers() {
-  const raw = localStorage.getItem('hub_users');
-  if (raw) return JSON.parse(raw);
-  // Utilisateurs par défaut : admin
-  const defaults = [{
-    username: 'admin',
-    password: 'Jamal2laleague',
-    role: 'admin',
-    perms: ALL_PERMS
-  }];
+  try {
+    const raw = localStorage.getItem('hub_users');
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  const defaults = [{ username:'admin', password:'Jamal2laleague', role:'admin', perms: ALL_PERMS }];
   localStorage.setItem('hub_users', JSON.stringify(defaults));
   return defaults;
 }
+function saveUsers(u) { localStorage.setItem('hub_users', JSON.stringify(u)); }
 
-function saveUsers(users) {
-  localStorage.setItem('hub_users', JSON.stringify(users));
-}
-
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // SESSION
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 let currentUser = null;
 
 function doLogin() {
   const username = document.getElementById('login-username').value.trim();
   const password = document.getElementById('login-password').value;
-  const users = getUsers();
-  const user = users.find(u => u.username === username && u.password === password);
-  if (!user) {
-    document.getElementById('login-error').style.display = 'block';
-    return;
-  }
+  const user = getUsers().find(u => u.username === username && u.password === password);
+  if (!user) { document.getElementById('login-error').style.display = 'block'; return; }
   currentUser = user;
   sessionStorage.setItem('hub_session', JSON.stringify(user));
   showApp();
 }
 
-function logout() {
-  sessionStorage.removeItem('hub_session');
-  currentUser = null;
-  location.reload();
-}
+function logout() { sessionStorage.removeItem('hub_session'); location.reload(); }
+function hasPerm(p) { return currentUser?.role === 'admin' || (currentUser?.perms||[]).includes(p); }
 
-function hasPerm(perm) {
-  if (!currentUser) return false;
-  if (currentUser.role === 'admin') return true;
-  return currentUser.perms && currentUser.perms.includes(perm);
-}
-
-// ═══════════════════════════════════════════════════════════
-// INIT APP
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
 function showApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   document.getElementById('display-username').textContent = currentUser.username;
-  document.getElementById('cfg-b4u-url').value = B4U_URL;
-  document.getElementById('cfg-shop-url').value = SHOP_URL;
 
-  // Appliquer les permissions sur les tabs
-  const tabPerms = {
-    'overview': 'overview',
-    'b4u-orders': 'b4u-orders',
-    'shop-orders': 'shop-orders',
-    'b4u-users': 'b4u-users',
-    'shop-users': 'shop-users',
-    'shop-stock': 'shop-stock',
-    'admin-users': null, // admin only
-    'settings': 'settings'
-  };
-
+  // Masquer tabs selon permissions
   document.querySelectorAll('.tab').forEach(tab => {
     const t = tab.dataset.tab;
-    if (t === 'admin-users') {
-      if (currentUser.role !== 'admin') tab.classList.add('hidden');
-    } else if (tabPerms[t] && !hasPerm(tabPerms[t])) {
-      tab.classList.add('hidden');
-    }
+    if (t === 'admin-users' && currentUser.role !== 'admin') tab.classList.add('hidden');
+    else if (!['admin-users','overview'].includes(t) && !hasPerm(t)) tab.classList.add('hidden');
   });
 
-  // Aller sur le premier tab visible
-  const firstVisible = document.querySelector('.tab:not(.hidden)');
-  if (firstVisible) switchTab(firstVisible.dataset.tab);
-
+  const first = document.querySelector('.tab:not(.hidden)');
+  if (first) switchTab(first.dataset.tab);
   checkStatus();
   if (hasPerm('overview')) loadOverview();
   if (currentUser.role === 'admin') renderHubUsers();
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // TABS
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 function switchTab(id) {
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === id));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + id));
-  const loaders = {
+  ({
     'b4u-orders': loadB4UOrders,
     'shop-orders': loadShopOrders,
     'b4u-users': loadB4UUsers,
     'shop-users': loadShopUsers,
     'shop-stock': loadShopStock,
     'admin-users': renderHubUsers
-  };
-  if (loaders[id]) loaders[id]();
+  })[id]?.();
 }
 
-// ═══════════════════════════════════════════════════════════
-// API HELPERS
-// ═══════════════════════════════════════════════════════════
-let b4uLoggedIn = false;
+// ═══════════════════════════════════════════════
+// API — B4U (session cookie)
+// ═══════════════════════════════════════════════
+let b4uReady = false;
 
-async function b4uLogin() {
+async function b4uEnsureLogin() {
+  if (b4uReady) return true;
   try {
     const fd = new FormData();
     fd.append('password', B4U_PASS);
-    await fetch(B4U_URL + '/login', { method: 'POST', body: fd, credentials: 'include', redirect: 'follow' });
-    b4uLoggedIn = true;
+    const r = await fetch(B4U_URL + '/login', { method:'POST', body:fd, credentials:'include', redirect:'follow' });
+    b4uReady = true;
     return true;
   } catch(e) { return false; }
 }
 
 async function b4uGet(path) {
   try {
-    if (!b4uLoggedIn) await b4uLogin();
-    const r = await fetch(B4U_URL + path, { credentials: 'include' });
+    await b4uEnsureLogin();
+    const r = await fetch(B4U_URL + path, { credentials:'include' });
+    if (!r.ok) return null;
     const ct = r.headers.get('content-type') || '';
-    if (!ct.includes('application/json') || r.url.includes('/login')) {
-      await b4uLogin();
-      const r2 = await fetch(B4U_URL + path, { credentials: 'include' });
-      const ct2 = r2.headers.get('content-type') || '';
-      if (!ct2.includes('application/json')) return null;
+    if (!ct.includes('json')) {
+      // Session expirée, on relogue
+      b4uReady = false;
+      await b4uEnsureLogin();
+      const r2 = await fetch(B4U_URL + path, { credentials:'include' });
+      if (!r2.ok) return null;
       return r2.json();
     }
-    if (!r.ok) return null;
     return r.json();
   } catch(e) { return null; }
 }
 
 async function b4uPost(path, data) {
   try {
+    await b4uEnsureLogin();
     const r = await fetch(B4U_URL + path, {
-      method: 'POST', credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
+      method:'POST', credentials:'include',
+      headers:{'Content-Type':'application/json'},
       body: JSON.stringify(data)
     });
     return r.ok ? r.json() : null;
   } catch(e) { return null; }
 }
 
+// ═══════════════════════════════════════════════
+// API — AutoShop (token)
+// ═══════════════════════════════════════════════
 async function shopGet(path) {
   try {
     const sep = path.includes('?') ? '&' : '?';
@@ -539,77 +448,91 @@ async function shopGet(path) {
 
 async function shopPost(path, data) {
   try {
-    const r = await fetch(SHOP_URL + path + '?token=' + SHOP_TOKEN, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Auth-Token': SHOP_TOKEN },
+    const sep = path.includes('?') ? '&' : '?';
+    const r = await fetch(SHOP_URL + path + sep + 'token=' + SHOP_TOKEN, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Auth-Token':SHOP_TOKEN},
       body: JSON.stringify(data)
     });
     return r.ok ? r.json() : null;
   } catch(e) { return null; }
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // STATUS
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 async function checkStatus() {
   const pb = document.getElementById('pill-b4u');
   const ps = document.getElementById('pill-shop');
-  const r1 = await b4uGet('/api/dashboard');
+  const [r1, r2] = await Promise.all([b4uGet('/api/dashboard'), shopGet('/api/stats')]);
   pb.className = 'bot-pill ' + (r1 ? 'online' : 'offline');
-  const r2 = await shopGet('/api/stats');
   ps.className = 'bot-pill ' + (r2 ? 'online' : 'offline');
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // OVERVIEW
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 async function loadOverview() {
-  const [b4uData, shopData] = await Promise.all([b4uGet('/api/dashboard'), shopGet('/api/stats')]);
-  if (b4uData?.stats) {
-    const s = b4uData.stats;
+  const [b4u, shop] = await Promise.all([b4uGet('/api/dashboard'), shopGet('/api/stats')]);
+
+  // B4U stats — champs réels: stats.revenue, stats.profit, stats.total_orders, stats.pending_orders
+  if (b4u?.stats) {
+    const s = b4u.stats;
     document.getElementById('s-b4u-rev').textContent = (s.revenue||0).toFixed(2) + '€';
     document.getElementById('s-b4u-profit').textContent = (s.profit||0).toFixed(2) + '€';
     document.getElementById('s-b4u-orders').textContent = s.total_orders || 0;
     document.getElementById('s-b4u-pending').textContent = (s.pending_orders||0) + ' en attente';
   }
-  if (shopData) {
-    document.getElementById('s-shop-rev').textContent = parseFloat(shopData.total_revenue||shopData.revenue||0).toFixed(2) + '€';
-    document.getElementById('s-shop-orders').textContent = shopData.total_orders||shopData.orders_count||0;
-    document.getElementById('s-shop-pending').textContent = (shopData.pending_orders||shopData.pending||0) + ' en attente';
-    document.getElementById('s-shop-online').textContent = shopData.online||shopData.online_24h||0;
-  }
-  const b4uRev = b4uData ? (b4uData.stats?.revenue||0) : 0;
-  const shopRev = shopData ? parseFloat(shopData.total_revenue||shopData.revenue||0) : 0;
-  document.getElementById('s-total-rev').textContent = (b4uRev + shopRev).toFixed(2) + '€';
-  const b4uOrd = b4uData ? (b4uData.stats?.total_orders||0) : 0;
-  const shopOrd = shopData ? (shopData.total_orders||shopData.orders_count||0) : 0;
-  document.getElementById('s-total-orders').textContent = b4uOrd + shopOrd;
 
+  // Shop stats — champs réels: total_revenue, total_orders, pending_orders, total_stock
+  if (shop) {
+    document.getElementById('s-shop-rev').textContent = (shop.total_revenue||0).toFixed(2) + '€';
+    document.getElementById('s-shop-orders').textContent = shop.total_orders || 0;
+    document.getElementById('s-shop-pending').textContent = (shop.pending_orders||0) + ' en attente';
+    document.getElementById('s-shop-stock').textContent = shop.total_stock || 0;
+  }
+
+  const b4uRev = b4u?.stats?.revenue || 0;
+  const shopRev = shop?.total_revenue || 0;
+  document.getElementById('s-total-rev').textContent = (b4uRev + shopRev).toFixed(2) + '€';
+  document.getElementById('s-total-orders').textContent = (b4u?.stats?.total_orders||0) + (shop?.total_orders||0);
+
+  // Commandes combinées
   const tbody = document.getElementById('all-orders-body');
   let rows = [];
-  if (b4uData?.orders) b4uData.orders.slice(0,15).forEach(o => rows.push({
-    bot:'b4u', id:o.id, client:(o.first_name||'')+(o.username?' @'+o.username:''),
-    product:(o.service||'')+(o.plan?' / '+o.plan:''), price:(o.price||0).toFixed(2)+'€', status:o.status, date:''
+
+  if (b4u?.orders) b4u.orders.slice(0,15).forEach(o => rows.push({
+    bot:'b4u', id:o.id,
+    client: (o.first_name||'') + (o.username ? ' @'+o.username : ''),
+    product: (o.service||'') + (o.plan ? ' / '+o.plan : ''),
+    price: (o.price||0).toFixed(2)+'€',
+    status: o.status, date: o.timestamp || ''
   }));
+
   const shopOrders = await shopGet('/api/orders');
-  if (shopOrders) (shopOrders.orders||shopOrders).slice(0,15).forEach(o => rows.push({
-    bot:'shop', id:o.id||o.order_id, client:o.username?'@'+o.username:(o.user_id||'—'),
-    product:o.product_name||o.product||o.item||'—', price:o.amount?o.amount+'€':'—', status:o.status, date:o.created_at||''
+  // Shop orders format: {id, user_id, username, product, slug, price, method, status, created_at}
+  if (shopOrders && Array.isArray(shopOrders)) shopOrders.slice(0,15).forEach(o => rows.push({
+    bot:'shop', id:o.id,
+    client: o.username ? '@'+o.username : String(o.user_id||'—'),
+    product: o.product || o.slug || '—',
+    price: o.price ? o.price+'€' : '—',
+    status: o.status, date: o.created_at || ''
   }));
-  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="7"><div class="empty">Aucune commande trouvée.</div></td></tr>'; return; }
+
+  if (!rows.length) { tbody.innerHTML = empty(7,'Aucune commande.'); return; }
   tbody.innerHTML = rows.map(r => `<tr>
     <td><span class="badge badge-${r.bot}">${r.bot==='b4u'?'B4U':'Shop'}</span></td>
     <td style="font-family:'Space Mono',monospace;font-size:12px">#${r.id}</td>
     <td>${r.client||'—'}</td><td>${r.product||'—'}</td>
     <td style="font-weight:700">${r.price}</td>
     <td>${statusBadge(r.status)}</td>
-    <td style="color:var(--muted);font-size:11px">${r.date?new Date(r.date).toLocaleDateString('fr'):'—'}</td>
+    <td style="color:var(--muted);font-size:11px">${r.date ? new Date(r.date).toLocaleDateString('fr') : '—'}</td>
   </tr>`).join('');
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // B4U ORDERS
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 async function loadB4UOrders() {
   const tbody = document.getElementById('b4u-orders-body');
   tbody.innerHTML = loading(9);
@@ -618,138 +541,131 @@ async function loadB4UOrders() {
   const canAct = hasPerm('actions');
   tbody.innerHTML = data.orders.map(o => `<tr>
     <td style="font-family:'Space Mono',monospace;font-size:12px">#${o.id}</td>
-    <td>${(o.first_name||'')+' '+(o.username?'@'+o.username:'')}</td>
+    <td>${(o.first_name||'')} ${o.username?'@'+o.username:''}</td>
     <td style="color:var(--muted);font-size:12px">${o.email||'—'}</td>
     <td>${o.service||'—'}</td><td>${o.plan||'—'}</td>
     <td style="font-weight:700">${(o.price||0).toFixed(2)}€</td>
     <td>${o.payment_method||'—'}</td>
     <td>${statusBadge(o.status)}</td>
     <td>${canAct ? `
-      ${o.status==='en_attente'?`<button class="btn-action success" onclick="b4uTakeOrder(${o.id})">Prendre</button>`:''}
-      ${o.status==='en_cours'?`<button class="btn-action success" onclick="b4uCompleteOrder(${o.id})">Terminer</button>`:''}
-      ${o.status!=='annulee'&&o.status!=='terminee'?`<button class="btn-action danger" onclick="b4uCancelOrder(${o.id})">Annuler</button>`:''}
-    ` : '<span style="color:var(--muted);font-size:10px;font-family:Space Mono">—</span>'}</td>
+      ${o.status==='en_attente'?`<button class="btn-action success" onclick="b4uTake(${o.id})">Prendre</button>`:''}
+      ${o.status==='en_cours'?`<button class="btn-action success" onclick="b4uComplete(${o.id})">Terminer</button>`:''}
+      ${!['annulee','terminee'].includes(o.status)?`<button class="btn-action danger" onclick="b4uCancel(${o.id})">Annuler</button>`:''}
+    ` : '—'}</td>
   </tr>`).join('');
 }
+async function b4uTake(id) { const r=await b4uPost('/api/order/'+id+'/take',{}); showAlert(r?'Prise en charge':'Erreur',r?'success':'error'); loadB4UOrders(); }
+async function b4uComplete(id) { const r=await b4uPost('/api/order/'+id+'/complete',{}); showAlert(r?'Terminée':'Erreur',r?'success':'error'); loadB4UOrders(); }
+async function b4uCancel(id) { if(!confirm('Annuler #'+id+' ?'))return; const r=await b4uPost('/api/order/'+id+'/cancel',{}); showAlert(r?'Annulée':'Erreur',r?'success':'error'); loadB4UOrders(); }
 
-async function b4uTakeOrder(id) { const r = await b4uPost('/api/order/'+id+'/take',{}); r?showAlert('Commande #'+id+' prise','success'):showAlert('Erreur','error'); loadB4UOrders(); }
-async function b4uCompleteOrder(id) { const r = await b4uPost('/api/order/'+id+'/complete',{}); r?showAlert('Commande #'+id+' terminée','success'):showAlert('Erreur','error'); loadB4UOrders(); }
-async function b4uCancelOrder(id) { if(!confirm('Annuler #'+id+' ?')) return; const r = await b4uPost('/api/order/'+id+'/cancel',{}); r?showAlert('Annulée','success'):showAlert('Erreur','error'); loadB4UOrders(); }
-
-// ═══════════════════════════════════════════════════════════
-// SHOP ORDERS
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+// SHOP ORDERS — champs réels: id, user_id, username, product, slug, price, method, status, created_at
+// ═══════════════════════════════════════════════
 async function loadShopOrders() {
   const tbody = document.getElementById('shop-orders-body');
   tbody.innerHTML = loading(8);
   const data = await shopGet('/api/orders');
-  const orders = data?.orders || data || [];
+  const orders = Array.isArray(data) ? data : [];
   if (!orders.length) { tbody.innerHTML = empty(8,'Aucune commande AutoShop.'); return; }
   const canAct = hasPerm('actions');
   tbody.innerHTML = orders.map(o => `<tr>
-    <td style="font-family:'Space Mono',monospace;font-size:12px">#${o.id||o.order_id}</td>
-    <td>${o.username?'@'+o.username:(o.user_id||'—')}</td>
-    <td>${o.product_name||o.product||o.item||'—'}</td>
-    <td style="font-weight:700">${o.amount?o.amount+'€':'—'}</td>
-    <td>${o.crypto||o.payment_method||'—'}</td>
+    <td style="font-family:'Space Mono',monospace;font-size:12px">#${o.id}</td>
+    <td>${o.username?'@'+o.username:String(o.user_id||'—')}</td>
+    <td>${o.product||o.slug||'—'}</td>
+    <td style="font-weight:700">${o.price!=null?o.price+'€':'—'}</td>
+    <td>${o.method||'—'}</td>
     <td>${statusBadge(o.status)}</td>
     <td style="color:var(--muted);font-size:11px">${o.created_at?new Date(o.created_at).toLocaleDateString('fr'):'—'}</td>
     <td>${canAct ? `
-      ${(o.status==='pending'||o.status==='en_attente')?`<button class="btn-action success" onclick="shopValidateOrder(${o.id||o.order_id})">Valider</button>`:''}
-      ${o.status!=='cancelled'&&o.status!=='annulee'?`<button class="btn-action danger" onclick="shopCancelOrder(${o.id||o.order_id})">Refuser</button>`:''}
+      ${o.status==='pending'?`<button class="btn-action success" onclick="shopValidate(${o.id})">Valider</button>`:''}
+      ${o.status!=='cancelled'?`<button class="btn-action danger" onclick="shopRefuse(${o.id})">Refuser</button>`:''}
     ` : '—'}</td>
   </tr>`).join('');
 }
+async function shopValidate(id) { const r=await shopPost('/api/orders/'+id+'/validate',{}); showAlert(r?'Validée':'Erreur',r?'success':'error'); loadShopOrders(); }
+async function shopRefuse(id) { if(!confirm('Refuser #'+id+' ?'))return; const r=await shopPost('/api/orders/'+id+'/refuse',{}); showAlert(r?'Refusée':'Erreur',r?'success':'error'); loadShopOrders(); }
 
-async function shopValidateOrder(id) { const r = await shopPost('/api/orders/'+id+'/validate',{}); r?showAlert('Validée','success'):showAlert('Erreur','error'); loadShopOrders(); }
-async function shopCancelOrder(id) { if(!confirm('Refuser #'+id+' ?')) return; const r = await shopPost('/api/orders/'+id+'/refuse',{}); r?showAlert('Refusée','success'):showAlert('Erreur','error'); loadShopOrders(); }
-
-// ═══════════════════════════════════════════════════════════
-// USERS
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+// B4U USERS — champs réels: user_id, username, first_name, last_name, total_orders, last_activity
+// ═══════════════════════════════════════════════
 async function loadB4UUsers() {
   const tbody = document.getElementById('b4u-users-body');
-  tbody.innerHTML = loading(6);
+  tbody.innerHTML = loading(5);
   const data = await b4uGet('/api/users');
-  const users = data?.users || data || [];
-  if (!users.length) { tbody.innerHTML = empty(6,'Aucun utilisateur.'); return; }
+  const users = data?.users || [];
+  if (!users.length) { tbody.innerHTML = empty(5,'Aucun utilisateur.'); return; }
   tbody.innerHTML = users.map(u => `<tr>
     <td style="font-family:'Space Mono',monospace;font-size:12px">${u.user_id}</td>
-    <td>${(u.first_name||'')+' '+(u.last_name||'')}</td>
-    <td style="color:var(--accent-b4u)">${u.username?'@'+u.username:'—'}</td>
-    <td>${u.order_count||0}</td>
-    <td style="font-weight:700">${(u.total_spent||0).toFixed(2)}€</td>
-    <td style="color:var(--muted);font-size:11px">${u.last_active?new Date(u.last_active).toLocaleDateString('fr'):'—'}</td>
+    <td>${(u.first_name||'')} ${u.last_name||''}</td>
+    <td style="color:var(--b4u)">${u.username?'@'+u.username:'—'}</td>
+    <td>${u.total_orders||0}</td>
+    <td style="color:var(--muted);font-size:11px">${u.last_activity?new Date(u.last_activity).toLocaleDateString('fr'):'—'}</td>
   </tr>`).join('');
 }
 
+// ═══════════════════════════════════════════════
+// SHOP USERS — champs réels: user_id, username, total_orders, total_spent, is_banned
+// ═══════════════════════════════════════════════
 async function loadShopUsers() {
   const tbody = document.getElementById('shop-users-body');
   tbody.innerHTML = loading(6);
   const data = await shopGet('/api/users');
-  const users = data?.users || data || [];
+  const users = Array.isArray(data) ? data : [];
   if (!users.length) { tbody.innerHTML = empty(6,'Aucun utilisateur.'); return; }
   const canAct = hasPerm('actions');
   tbody.innerHTML = users.map(u => `<tr>
-    <td style="font-family:'Space Mono',monospace;font-size:12px">${u.user_id||u.id}</td>
-    <td style="color:var(--accent-shop)">${u.username?'@'+u.username:'—'}</td>
-    <td>${u.order_count||u.orders||0}</td>
-    <td style="font-weight:700">${parseFloat(u.total_spent||u.spent||0).toFixed(2)}€</td>
-    <td>${u.banned?'<span class="badge badge-cancel">Banni</span>':'<span class="badge badge-done">Actif</span>'}</td>
-    <td>${canAct ? (u.banned
-      ? `<button class="btn-action success" onclick="shopUnban(${u.user_id||u.id})">Débannir</button>`
-      : `<button class="btn-action danger" onclick="shopBan(${u.user_id||u.id})">Bannir</button>`)
-      : '—'}</td>
+    <td style="font-family:'Space Mono',monospace;font-size:12px">${u.user_id}</td>
+    <td style="color:var(--shop)">${u.username?'@'+u.username:'—'}</td>
+    <td>${u.total_orders||0}</td>
+    <td style="font-weight:700">${(u.total_spent||0).toFixed(2)}€</td>
+    <td>${u.is_banned?'<span class="badge badge-cancel">Banni</span>':'<span class="badge badge-done">Actif</span>'}</td>
+    <td>${canAct?(u.is_banned
+      ?`<button class="btn-action success" onclick="shopUnban(${u.user_id})">Débannir</button>`
+      :`<button class="btn-action danger" onclick="shopBan(${u.user_id})">Bannir</button>`)
+      :'—'}</td>
   </tr>`).join('');
 }
+async function shopBan(uid) { if(!confirm('Bannir '+uid+' ?'))return; const r=await shopPost('/api/users/'+uid+'/ban',{}); showAlert(r?'Banni':'Erreur',r?'success':'error'); loadShopUsers(); }
+async function shopUnban(uid) { const r=await shopPost('/api/users/'+uid+'/unban',{}); showAlert(r?'Débanni':'Erreur',r?'success':'error'); loadShopUsers(); }
 
-async function shopBan(uid) { if(!confirm('Bannir '+uid+' ?')) return; const r = await shopPost('/api/users/'+uid+'/ban',{}); r?showAlert('Banni','success'):showAlert('Erreur','error'); loadShopUsers(); }
-async function shopUnban(uid) { const r = await shopPost('/api/users/'+uid+'/unban',{}); r?showAlert('Débanni','success'):showAlert('Erreur','error'); loadShopUsers(); }
-
-// ═══════════════════════════════════════════════════════════
-// STOCK
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+// STOCK — champs réels: id, slug, name, price, stock
+// ═══════════════════════════════════════════════
 async function loadShopStock() {
   const tbody = document.getElementById('shop-stock-body');
-  tbody.innerHTML = loading(5);
+  tbody.innerHTML = loading(4);
   const data = await shopGet('/api/stock');
-  const items = data?.stock || data?.items || data || [];
-  if (!Array.isArray(items)||!items.length) { tbody.innerHTML = empty(5,'Stock vide.'); return; }
+  const items = Array.isArray(data) ? data : [];
+  if (!items.length) { tbody.innerHTML = empty(4,'Stock vide.'); return; }
   tbody.innerHTML = items.map(i => `<tr>
-    <td>${i.name||i.product_name||'—'}</td>
-    <td>${i.category||'—'}</td>
-    <td style="font-weight:700;color:${(i.quantity||i.count||0)<5?'var(--red)':'var(--green)'}">${i.quantity||i.count||0}</td>
-    <td>${i.price?i.price+'€':'—'}</td>
-    <td>${i.active!==false?'<span class="badge badge-done">Actif</span>':'<span class="badge badge-cancel">Inactif</span>'}</td>
+    <td>${i.name||'—'}</td>
+    <td style="color:var(--muted);font-size:11px">${i.slug||'—'}</td>
+    <td style="font-weight:700;color:${(i.stock||0)<5?'var(--red)':'var(--green)'}">${i.stock||0}</td>
+    <td>${i.price!=null?i.price+'€':'—'}</td>
   </tr>`).join('');
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // GESTION UTILISATEURS HUB
-// ═══════════════════════════════════════════════════════════
-const PERM_LABELS = {
-  'overview': 'Vue globale', 'b4u-orders': 'Commandes B4U',
-  'shop-orders': 'Commandes Shop', 'b4u-users': 'Users B4U',
-  'shop-users': 'Users Shop', 'shop-stock': 'Stock',
-  'actions': 'Actions', 'settings': 'Config'
-};
+// ═══════════════════════════════════════════════
+const PERM_LABELS = {'overview':'Vue globale','b4u-orders':'Commandes B4U','shop-orders':'Commandes Shop','b4u-users':'Users B4U','shop-users':'Users Shop','shop-stock':'Stock','actions':'Actions','settings':'Config'};
 
 function renderHubUsers() {
   const users = getUsers();
   const el = document.getElementById('hub-users-list');
   if (!el) return;
-  el.innerHTML = users.map((u, idx) => `
-    <div style="border:1px solid var(--border);padding:14px;margin-bottom:10px;position:relative">
+  el.innerHTML = users.map((u,idx) => `
+    <div style="border:1px solid var(--border);padding:14px;margin-bottom:10px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <div>
-          <span style="font-weight:700;font-size:14px">${u.username}</span>
+          <span style="font-weight:700">${u.username}</span>
           <span class="badge ${u.role==='admin'?'badge-admin':'badge-progress'}" style="margin-left:8px">${u.role==='admin'?'Admin':'User'}</span>
         </div>
-        ${u.role!=='admin' ? `<button class="btn-action danger" onclick="deleteUser(${idx})">Supprimer</button>` : ''}
+        ${u.role!=='admin'?`<button class="btn-action danger" onclick="deleteUser(${idx})">Supprimer</button>`:''}
       </div>
-      ${u.role!=='admin' ? `<div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);line-height:1.8">
-        ${u.perms.map(p => `<span style="background:var(--surface2);padding:2px 8px;margin-right:4px;display:inline-block">${PERM_LABELS[p]||p}</span>`).join('')}
-      </div>` : '<div style="font-family:Space Mono,monospace;font-size:9px;color:var(--muted)">Accès complet à tout</div>'}
+      <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);line-height:2">
+        ${u.role==='admin'?'Accès complet':u.perms.map(p=>`<span style="background:var(--surface2);padding:2px 8px;margin:2px;display:inline-block">${PERM_LABELS[p]||p}</span>`).join('')}
+      </div>
     </div>
   `).join('');
 }
@@ -757,87 +673,83 @@ function renderHubUsers() {
 function createUser() {
   const username = document.getElementById('new-username').value.trim();
   const password = document.getElementById('new-password').value;
-  if (!username || !password) { showAlert('Remplis tous les champs', 'error'); return; }
+  if (!username || !password) { showAlert('Remplis tous les champs','error'); return; }
   const users = getUsers();
-  if (users.find(u => u.username === username)) { showAlert('Ce nom existe déjà', 'error'); return; }
-  const perms = ALL_PERMS.filter(p => {
-    const el = document.getElementById('p-' + p);
-    return el && el.checked;
-  });
-  users.push({ username, password, role: 'user', perms });
+  if (users.find(u => u.username===username)) { showAlert('Ce nom existe déjà','error'); return; }
+  const perms = ALL_PERMS.filter(p => { const el=document.getElementById('p-'+p); return el&&el.checked; });
+  users.push({ username, password, role:'user', perms });
   saveUsers(users);
   document.getElementById('new-username').value = '';
   document.getElementById('new-password').value = '';
-  ALL_PERMS.forEach(p => { const el = document.getElementById('p-'+p); if(el) el.checked = false; });
-  document.getElementById('p-overview').checked = true;
-  showAlert('Utilisateur "' + username + '" créé ✓', 'success');
+  showAlert('Utilisateur "'+username+'" créé ✓','success');
   renderHubUsers();
 }
 
 function deleteUser(idx) {
   const users = getUsers();
-  if (!confirm('Supprimer "' + users[idx].username + '" ?')) return;
-  users.splice(idx, 1);
-  saveUsers(users);
-  showAlert('Utilisateur supprimé', 'success');
-  renderHubUsers();
+  if (!confirm('Supprimer "'+users[idx].username+'" ?')) return;
+  users.splice(idx,1); saveUsers(users);
+  showAlert('Supprimé','success'); renderHubUsers();
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // SETTINGS
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 async function testB4U() {
   const r = await b4uGet('/api/dashboard');
   const el = document.getElementById('cfg-b4u-status');
   el.textContent = r ? '✓ Connecté' : '✗ Hors ligne';
   el.style.color = r ? 'var(--green)' : 'var(--red)';
-  showAlert(r ? '✓ B4U connecté' : '✗ B4U hors ligne', r ? 'success' : 'error');
 }
 async function testShop() {
   const r = await shopGet('/api/stats');
   const el = document.getElementById('cfg-shop-status');
   el.textContent = r ? '✓ Connecté' : '✗ Hors ligne';
   el.style.color = r ? 'var(--green)' : 'var(--red)';
-  showAlert(r ? '✓ Shop connecté' : '✗ Shop hors ligne', r ? 'success' : 'error');
 }
 async function sendBroadcast() {
   const msg = document.getElementById('broadcast-msg').value.trim();
   if (!msg) return;
-  if (!confirm('Envoyer à tous les users AutoShop ?')) return;
-  const r = await shopPost('/api/broadcast', { message: msg });
-  r ? (showAlert('Broadcast envoyé', 'success'), document.getElementById('broadcast-msg').value='') : showAlert('Erreur broadcast', 'error');
+  if (!confirm('Envoyer à tous ?')) return;
+  const r = await shopPost('/api/broadcast',{message:msg});
+  r ? (showAlert('Envoyé','success'), document.getElementById('broadcast-msg').value='') : showAlert('Erreur','error');
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // HELPERS
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 function statusBadge(s) {
-  const map = { en_attente:['pending','En attente'], pending:['pending','En attente'], en_cours:['progress','En cours'], processing:['progress','En cours'], terminee:['done','Terminée'], completed:['done','Terminée'], annulee:['cancel','Annulée'], cancelled:['cancel','Annulée'], refused:['cancel','Refusée'] };
-  const [cls, label] = map[s] || ['pending', s||'?'];
+  const map = {
+    en_attente:['pending','En attente'], pending:['pending','En attente'],
+    en_cours:['progress','En cours'], processing:['progress','En cours'],
+    terminee:['done','Terminée'], completed:['done','Terminée'],
+    annulee:['cancel','Annulée'], cancelled:['cancel','Annulée'],
+    refused:['cancel','Refusée']
+  };
+  const [cls,label] = map[s]||['pending',s||'?'];
   return `<span class="badge badge-${cls}">${label}</span>`;
 }
-function loading(cols) { return `<tr><td colspan="${cols}"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr>`; }
-function empty(cols, msg) { return `<tr><td colspan="${cols}"><div class="empty">${msg}</div></td></tr>`; }
+function loading(c) { return `<tr><td colspan="${c}"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr>`; }
+function empty(c,m) { return `<tr><td colspan="${c}"><div class="empty">${m}</div></td></tr>`; }
 
 let alertTimer;
-function showAlert(msg, type) {
+function showAlert(msg,type) {
   clearTimeout(alertTimer);
   document.querySelector('.alert')?.remove();
   const el = document.createElement('div');
   el.className = 'alert ' + type;
   el.textContent = msg;
   document.body.appendChild(el);
-  alertTimer = setTimeout(() => el.remove(), 3500);
+  alertTimer = setTimeout(()=>el.remove(), 3500);
 }
 
-// ═══════════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════
 const saved = sessionStorage.getItem('hub_session');
-if (saved) { currentUser = JSON.parse(saved); showApp(); }
-
-document.getElementById('login-password').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-document.getElementById('login-username').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+if (saved) { try { currentUser = JSON.parse(saved); showApp(); } catch(e) {} }
+document.getElementById('login-password').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('login-username').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 </script>
 </body>
 </html>
