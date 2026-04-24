@@ -488,14 +488,28 @@ function switchTab(id) {
 // ═══════════════════════════════════════════════════════════
 // API HELPERS
 // ═══════════════════════════════════════════════════════════
+let b4uLoggedIn = false;
+
+async function b4uLogin() {
+  try {
+    const fd = new FormData();
+    fd.append('password', B4U_PASS);
+    await fetch(B4U_URL + '/login', { method: 'POST', body: fd, credentials: 'include', redirect: 'follow' });
+    b4uLoggedIn = true;
+    return true;
+  } catch(e) { return false; }
+}
+
 async function b4uGet(path) {
   try {
+    if (!b4uLoggedIn) await b4uLogin();
     const r = await fetch(B4U_URL + path, { credentials: 'include' });
-    if (r.status === 401 || r.url.includes('/login')) {
-      const fd = new FormData(); fd.append('password', B4U_PASS);
-      await fetch(B4U_URL + '/login', { method: 'POST', body: fd, credentials: 'include' });
+    const ct = r.headers.get('content-type') || '';
+    if (!ct.includes('application/json') || r.url.includes('/login')) {
+      await b4uLogin();
       const r2 = await fetch(B4U_URL + path, { credentials: 'include' });
-      if (!r2.ok) return null;
+      const ct2 = r2.headers.get('content-type') || '';
+      if (!ct2.includes('application/json')) return null;
       return r2.json();
     }
     if (!r.ok) return null;
