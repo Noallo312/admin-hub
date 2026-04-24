@@ -540,7 +540,7 @@ async function shopPost(path, data) {
 async function checkStatus() {
   const pb = document.getElementById('pill-b4u');
   const ps = document.getElementById('pill-shop');
-  const r1 = await b4uGet('/health');
+  const r1 = await b4uGet('/api/dashboard');
   pb.className = 'bot-pill ' + (r1 ? 'online' : 'offline');
   const r2 = await shopGet('/api/stats');
   ps.className = 'bot-pill ' + (r2 ? 'online' : 'offline');
@@ -773,7 +773,7 @@ function deleteUser(idx) {
 // SETTINGS
 // ═══════════════════════════════════════════════════════════
 async function testB4U() {
-  const r = await b4uGet('/health');
+  const r = await b4uGet('/api/dashboard');
   const el = document.getElementById('cfg-b4u-status');
   el.textContent = r ? '✓ Connecté' : '✗ Hors ligne';
   el.style.color = r ? 'var(--green)' : 'var(--red)';
