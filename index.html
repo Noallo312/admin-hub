@@ -391,43 +391,22 @@ function switchTab(id) {
 // ═══════════════════════════════════════════════
 // API — B4U (session cookie)
 // ═══════════════════════════════════════════════
-let b4uReady = false;
-
-async function b4uEnsureLogin() {
-  if (b4uReady) return true;
-  try {
-    const fd = new FormData();
-    fd.append('password', B4U_PASS);
-    const r = await fetch(B4U_URL + '/login', { method:'POST', body:fd, credentials:'include', redirect:'follow' });
-    b4uReady = true;
-    return true;
-  } catch(e) { return false; }
-}
-
 async function b4uGet(path) {
   try {
-    await b4uEnsureLogin();
-    const r = await fetch(B4U_URL + path, { credentials:'include' });
+    const sep = path.includes('?') ? '&' : '?';
+    const url = path.includes('token=') ? B4U_URL + path : B4U_URL + path + sep + 'token=' + B4U_PASS;
+    const r = await fetch(url);
     if (!r.ok) return null;
-    const ct = r.headers.get('content-type') || '';
-    if (!ct.includes('json')) {
-      // Session expirée, on relogue
-      b4uReady = false;
-      await b4uEnsureLogin();
-      const r2 = await fetch(B4U_URL + path, { credentials:'include' });
-      if (!r2.ok) return null;
-      return r2.json();
-    }
     return r.json();
   } catch(e) { return null; }
 }
 
 async function b4uPost(path, data) {
   try {
-    await b4uEnsureLogin();
-    const r = await fetch(B4U_URL + path, {
-      method:'POST', credentials:'include',
-      headers:{'Content-Type':'application/json'},
+    const sep = path.includes('?') ? '&' : '?';
+    const r = await fetch(B4U_URL + path + sep + 'token=' + B4U_PASS, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Auth-Token':B4U_PASS},
       body: JSON.stringify(data)
     });
     return r.ok ? r.json() : null;
@@ -464,7 +443,7 @@ async function shopPost(path, data) {
 async function checkStatus() {
   const pb = document.getElementById('pill-b4u');
   const ps = document.getElementById('pill-shop');
-  const [r1, r2] = await Promise.all([b4uGet('/api/dashboard'), shopGet('/api/stats')]);
+  const [r1, r2] = await Promise.all([b4uGet('/api/token/dashboard'), shopGet('/api/stats')]);
   pb.className = 'bot-pill ' + (r1 ? 'online' : 'offline');
   ps.className = 'bot-pill ' + (r2 ? 'online' : 'offline');
 }
@@ -473,7 +452,7 @@ async function checkStatus() {
 // OVERVIEW
 // ═══════════════════════════════════════════════
 async function loadOverview() {
-  const [b4u, shop] = await Promise.all([b4uGet('/api/dashboard'), shopGet('/api/stats')]);
+  const [b4u, shop] = await Promise.all([b4uGet('/api/token/dashboard'), shopGet('/api/stats')]);
 
   // B4U stats — champs réels: stats.revenue, stats.profit, stats.total_orders, stats.pending_orders
   if (b4u?.stats) {
@@ -536,7 +515,7 @@ async function loadOverview() {
 async function loadB4UOrders() {
   const tbody = document.getElementById('b4u-orders-body');
   tbody.innerHTML = loading(9);
-  const data = await b4uGet('/api/dashboard');
+  const data = await b4uGet('/api/token/dashboard');
   if (!data?.orders?.length) { tbody.innerHTML = empty(9,'Aucune commande B4U.'); return; }
   const canAct = hasPerm('actions');
   tbody.innerHTML = data.orders.map(o => `<tr>
@@ -554,9 +533,9 @@ async function loadB4UOrders() {
     ` : '—'}</td>
   </tr>`).join('');
 }
-async function b4uTake(id) { const r=await b4uPost('/api/order/'+id+'/take',{}); showAlert(r?'Prise en charge':'Erreur',r?'success':'error'); loadB4UOrders(); }
-async function b4uComplete(id) { const r=await b4uPost('/api/order/'+id+'/complete',{}); showAlert(r?'Terminée':'Erreur',r?'success':'error'); loadB4UOrders(); }
-async function b4uCancel(id) { if(!confirm('Annuler #'+id+' ?'))return; const r=await b4uPost('/api/order/'+id+'/cancel',{}); showAlert(r?'Annulée':'Erreur',r?'success':'error'); loadB4UOrders(); }
+async function b4uTake(id) { const r=await b4uPost('/api/token/order/'+id+'/take',{}); showAlert(r?'Prise en charge':'Erreur',r?'success':'error'); loadB4UOrders(); }
+async function b4uComplete(id) { const r=await b4uPost('/api/token/order/'+id+'/complete',{}); showAlert(r?'Terminée':'Erreur',r?'success':'error'); loadB4UOrders(); }
+async function b4uCancel(id) { if(!confirm('Annuler #'+id+' ?'))return; const r=await b4uPost('/api/token/order/'+id+'/cancel',{}); showAlert(r?'Annulée':'Erreur',r?'success':'error'); loadB4UOrders(); }
 
 // ═══════════════════════════════════════════════
 // SHOP ORDERS — champs réels: id, user_id, username, product, slug, price, method, status, created_at
@@ -591,7 +570,7 @@ async function shopRefuse(id) { if(!confirm('Refuser #'+id+' ?'))return; const r
 async function loadB4UUsers() {
   const tbody = document.getElementById('b4u-users-body');
   tbody.innerHTML = loading(5);
-  const data = await b4uGet('/api/users');
+  const data = await b4uGet('/api/token/users');
   const users = data?.users || [];
   if (!users.length) { tbody.innerHTML = empty(5,'Aucun utilisateur.'); return; }
   tbody.innerHTML = users.map(u => `<tr>
@@ -696,7 +675,7 @@ function deleteUser(idx) {
 // SETTINGS
 // ═══════════════════════════════════════════════
 async function testB4U() {
-  const r = await b4uGet('/api/dashboard');
+  const r = await b4uGet('/api/token/dashboard');
   const el = document.getElementById('cfg-b4u-status');
   el.textContent = r ? '✓ Connecté' : '✗ Hors ligne';
   el.style.color = r ? 'var(--green)' : 'var(--red)';
