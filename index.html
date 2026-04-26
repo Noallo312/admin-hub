@@ -337,14 +337,25 @@ function saveUsers(u) { localStorage.setItem('hub_users', JSON.stringify(u)); }
 // ═══════════════════════════════════════════════
 let currentUser = null;
 
-function doLogin() {
+async function doLogin() {
   const username = document.getElementById('login-username').value.trim();
   const password = document.getElementById('login-password').value;
-  const user = getUsers().find(u => u.username === username && u.password === password);
-  if (!user) { document.getElementById('login-error').style.display = 'block'; return; }
-  currentUser = user;
-  sessionStorage.setItem('hub_session', JSON.stringify(user));
-  showApp();
+  document.getElementById('login-error').style.display = 'none';
+  try {
+    const r = await fetch(B4U_URL + '/api/hub/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username, password})
+    });
+    if (!r.ok) { document.getElementById('login-error').style.display = 'block'; return; }
+    const user = await r.json();
+    currentUser = user;
+    sessionStorage.setItem('hub_session', JSON.stringify(user));
+    showApp();
+  } catch(e) {
+    document.getElementById('login-error').textContent = 'Erreur de connexion au serveur.';
+    document.getElementById('login-error').style.display = 'block';
+  }
 }
 
 function logout() { sessionStorage.removeItem('hub_session'); location.reload(); }
@@ -629,46 +640,60 @@ async function loadShopStock() {
 // ═══════════════════════════════════════════════
 const PERM_LABELS = {'overview':'Vue globale','b4u-orders':'Commandes B4U','shop-orders':'Commandes Shop','b4u-users':'Users B4U','shop-users':'Users Shop','shop-stock':'Stock','actions':'Actions','settings':'Config'};
 
-function renderHubUsers() {
-  const users = getUsers();
+async function renderHubUsers() {
   const el = document.getElementById('hub-users-list');
   if (!el) return;
-  el.innerHTML = users.map((u,idx) => `
-    <div style="border:1px solid var(--border);padding:14px;margin-bottom:10px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div>
-          <span style="font-weight:700">${u.username}</span>
-          <span class="badge ${u.role==='admin'?'badge-admin':'badge-progress'}" style="margin-left:8px">${u.role==='admin'?'Admin':'User'}</span>
+  el.innerHTML = '<div style="color:var(--muted);font-family:Space Mono,monospace;font-size:11px">Chargement...</div>';
+  try {
+    const r = await fetch(B4U_URL + '/api/hub/users?token=' + B4U_PASS, {headers:{'X-Auth-Token':B4U_PASS}});
+    if (!r.ok) { el.innerHTML = '<div style="color:var(--red);font-size:11px">Erreur chargement</div>'; return; }
+    const users = await r.json();
+    el.innerHTML = users.map(u => `
+      <div style="border:1px solid var(--border);padding:14px;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div>
+            <span style="font-weight:700">${u.username}</span>
+            <span class="badge ${u.role==='admin'?'badge-admin':'badge-progress'}" style="margin-left:8px">${u.role==='admin'?'Admin':'User'}</span>
+          </div>
+          ${u.role!=='admin'?`<button class="btn-action danger" onclick="deleteUser('${u.username}')">Supprimer</button>`:''}
         </div>
-        ${u.role!=='admin'?`<button class="btn-action danger" onclick="deleteUser(${idx})">Supprimer</button>`:''}
+        <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);line-height:2">
+          ${u.role==='admin'?'Accès complet':u.perms.map(p=>`<span style="background:var(--surface2);padding:2px 8px;margin:2px;display:inline-block">${PERM_LABELS[p]||p}</span>`).join('')}
+        </div>
       </div>
-      <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);line-height:2">
-        ${u.role==='admin'?'Accès complet':u.perms.map(p=>`<span style="background:var(--surface2);padding:2px 8px;margin:2px;display:inline-block">${PERM_LABELS[p]||p}</span>`).join('')}
-      </div>
-    </div>
-  `).join('');
+    `).join('');
+  } catch(e) { el.innerHTML = '<div style="color:var(--red);font-size:11px">Erreur serveur</div>'; }
 }
 
-function createUser() {
+async function createUser() {
   const username = document.getElementById('new-username').value.trim();
   const password = document.getElementById('new-password').value;
   if (!username || !password) { showAlert('Remplis tous les champs','error'); return; }
-  const users = getUsers();
-  if (users.find(u => u.username===username)) { showAlert('Ce nom existe déjà','error'); return; }
   const perms = ALL_PERMS.filter(p => { const el=document.getElementById('p-'+p); return el&&el.checked; });
-  users.push({ username, password, role:'user', perms });
-  saveUsers(users);
-  document.getElementById('new-username').value = '';
-  document.getElementById('new-password').value = '';
-  showAlert('Utilisateur "'+username+'" créé ✓','success');
-  renderHubUsers();
+  try {
+    const r = await fetch(B4U_URL + '/api/hub/users?token=' + B4U_PASS, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-Auth-Token': B4U_PASS},
+      body: JSON.stringify({username, password, perms})
+    });
+    const data = await r.json();
+    if (!r.ok) { showAlert(data.error || 'Erreur','error'); return; }
+    document.getElementById('new-username').value = '';
+    document.getElementById('new-password').value = '';
+    showAlert('Utilisateur "'+username+'" créé ✓','success');
+    renderHubUsers();
+  } catch(e) { showAlert('Erreur serveur','error'); }
 }
 
-function deleteUser(idx) {
-  const users = getUsers();
-  if (!confirm('Supprimer "'+users[idx].username+'" ?')) return;
-  users.splice(idx,1); saveUsers(users);
-  showAlert('Supprimé','success'); renderHubUsers();
+async function deleteUser(username) {
+  if (!confirm('Supprimer "'+username+'" ?')) return;
+  try {
+    const r = await fetch(B4U_URL + '/api/hub/users/' + username + '?token=' + B4U_PASS, {
+      method: 'DELETE', headers: {'X-Auth-Token': B4U_PASS}
+    });
+    if (r.ok) { showAlert('Supprimé','success'); renderHubUsers(); }
+    else showAlert('Erreur','error');
+  } catch(e) { showAlert('Erreur serveur','error'); }
 }
 
 // ═══════════════════════════════════════════════
