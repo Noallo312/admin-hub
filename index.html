@@ -180,6 +180,7 @@ tr:hover td{background:var(--surface2)}
         <div class="stat-card shop"><div class="stat-label">Shop — Stock total</div><div class="stat-value shop" id="s-shop-stock">—</div><div class="stat-sub">Unités</div></div>
         <div class="stat-card both"><div class="stat-label">Total — Revenus</div><div class="stat-value both" id="s-total-rev">—</div><div class="stat-sub">Tous bots</div></div>
         <div class="stat-card both"><div class="stat-label">Total — Commandes</div><div class="stat-value both" id="s-total-orders">—</div><div class="stat-sub">Combiné</div></div>
+        <div class="stat-card shop"><div class="stat-label">Shop — Gain potentiel</div><div class="stat-value shop" id="s-shop-potential">—</div><div class="stat-sub">Si tout le stock vendu</div></div>
       </div>
       <div class="section-header">
         <div class="section-title">Dernières commandes</div>
@@ -246,8 +247,8 @@ tr:hover td{background:var(--surface2)}
         <button class="btn-refresh" onclick="loadShopStock()">↻ Refresh</button>
       </div>
       <div class="table-wrap">
-        <table><thead><tr><th>Produit</th><th>Slug</th><th>Stock</th><th>Prix</th></tr></thead>
-        <tbody id="shop-stock-body"><tr><td colspan="4"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr></tbody></table>
+        <table><thead><tr><th>Produit</th><th>Slug</th><th>Stock</th><th>Prix unitaire</th><th>Gain potentiel</th></tr></thead>
+        <tbody id="shop-stock-body"><tr><td colspan="5"><div class="loading"><span class="spinner"></span>Chargement...</div></td></tr></tbody></table>
       </div>
     </div>
 
@@ -481,6 +482,13 @@ async function loadOverview() {
     document.getElementById('s-shop-pending').textContent = (shop.pending_orders||0) + ' en attente';
     document.getElementById('s-shop-stock').textContent = shop.total_stock || 0;
   }
+  // Gain potentiel — calculé depuis /api/stock
+  const stockData = await shopGet('/api/stock');
+  if (Array.isArray(stockData) && stockData.length) {
+    const potential = stockData.reduce((sum, i) => sum + (i.stock||0) * (i.price||0), 0);
+    const el = document.getElementById('s-shop-potential');
+    if (el) el.textContent = potential.toFixed(2) + '€';
+  }
 
   const b4uRev = b4u?.stats?.revenue || 0;
   const shopRev = shop?.total_revenue || 0;
@@ -623,16 +631,28 @@ async function shopUnban(uid) { const r=await shopPost('/api/users/'+uid+'/unban
 // ═══════════════════════════════════════════════
 async function loadShopStock() {
   const tbody = document.getElementById('shop-stock-body');
-  tbody.innerHTML = loading(4);
+  tbody.innerHTML = loading(5);
   const data = await shopGet('/api/stock');
   const items = Array.isArray(data) ? data : [];
-  if (!items.length) { tbody.innerHTML = empty(4,'Stock vide.'); return; }
-  tbody.innerHTML = items.map(i => `<tr>
-    <td>${i.name||'—'}</td>
-    <td style="color:var(--muted);font-size:11px">${i.slug||'—'}</td>
-    <td style="font-weight:700;color:${(i.stock||0)<5?'var(--red)':'var(--green)'}">${i.stock||0}</td>
-    <td>${i.price!=null?i.price+'€':'—'}</td>
-  </tr>`).join('');
+  if (!items.length) { tbody.innerHTML = empty(5,'Stock vide.'); return; }
+  const totalPotential = items.reduce((sum, i) => sum + (i.stock||0) * (i.price||0), 0);
+  tbody.innerHTML = items.map(i => {
+    const potential = (i.stock||0) * (i.price||0);
+    return `<tr>
+      <td>${i.name||'—'}</td>
+      <td style="color:var(--muted);font-size:11px">${i.slug||'—'}</td>
+      <td style="font-weight:700;color:${(i.stock||0)<5?'var(--red)':'var(--green)'}">${i.stock||0}</td>
+      <td>${i.price!=null?i.price+'€':'—'}</td>
+      <td style="font-weight:700;color:var(--both)">${potential>0?potential.toFixed(2)+'€':'—'}</td>
+    </tr>`;
+  }).join('') + `<tr style="background:var(--surface2)">
+    <td colspan="3" style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase">TOTAL POTENTIEL</td>
+    <td></td>
+    <td style="font-weight:800;font-size:16px;color:var(--shop)">${totalPotential.toFixed(2)}€</td>
+  </tr>`;
+  // Met à jour la card overview si elle existe
+  const el = document.getElementById('s-shop-potential');
+  if (el) el.textContent = totalPotential.toFixed(2) + '€';
 }
 
 // ═══════════════════════════════════════════════
